@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cacheType: 1
-  lastUpdatedAtString: 2019-03-21T12:47:33.891-04:00
+  lastUpdatedAtString: 2019-03-21T12:53:05.394-04:00
   initializedAtString: 2019-03-21T12:42:33.581-04:00
   currentGitRemote:
     name: origin
@@ -25,13 +25,13 @@ MonoBehaviour:
     token: 
   currentGitBranch:
     name: master
-    tracking: 
+    tracking: origin/master
   currentConfigBranch:
     name: master
     remote:
-      name: 
-      url: 
-    trackingBranch: 
+      name: origin
+      url: https://github.com/nasalomons/Sol-Djers.git
+    trackingBranch: master
   currentConfigRemote:
     name: origin
     url: https://github.com/nasalomons/Sol-Djers.git
