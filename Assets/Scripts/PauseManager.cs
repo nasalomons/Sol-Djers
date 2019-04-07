@@ -4,19 +4,25 @@ using UnityEngine;
 
 /* Singleton class that manages the paused/unpaused state of the game. */
 public sealed class PauseManager : MonoBehaviour {
-    private static readonly PauseManager INSTANCE = new PauseManager();
-
+    private static PauseManager pauseManager;
     private bool paused;
 
-    private PauseManager() {
+    public static PauseManager Instance {
+        get {
+            if(pauseManager == null) {
+                pauseManager = FindObjectOfType(typeof(PauseManager)) as PauseManager;  
+                pauseManager.SetUp();
+            }
+
+            return pauseManager;
+        }
+    }
+
+    private void SetUp() {
         paused = false;
     }
 
-    public static PauseManager getInstance() {
-        return INSTANCE;
-    }
-
-    public bool isPaused() {
+    public bool IsPaused() {
         return paused;
     }
 
