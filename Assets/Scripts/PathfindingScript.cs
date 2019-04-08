@@ -26,9 +26,6 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
         lastPauseStatus = false;
     }
 
-    void OnEnable() {
-    }
-
     void OnDisable() {
         eventManager.Unsubscribe(this);
     }
