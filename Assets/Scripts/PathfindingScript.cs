@@ -48,25 +48,35 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
                 lastPauseStatus = false;
                 agent.isStopped = false;
             }
+
+            // Player is currently moving
+            if (targetIndicator != null) {
+                // Checks if player has reached the destination
+                if (agent.transform.position.x == agent.destination.x && agent.transform.position.z == agent.destination.z) {
+                    GameObject.Destroy(targetIndicator);
+                    targetIndicator = null;
+                    lineRenderer.positionCount = 0;
+                } else {
+                    lineRenderer.positionCount = agent.path.corners.Length;
+                    lineRenderer.SetPositions(agent.path.corners);
+                }
+            }
         }
 
         if (Input.GetMouseButtonDown(0)) {
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100)) {
                 Action action = new Action("move", this, clickPosition.point);
                 eventManager.QueueAction(action);
-            }
-        }
-
-        // Player is currently moving
-        if (targetIndicator != null) {
-            // Checks if player has reached the destination
-            if (agent.transform.position.x == agent.destination.x && agent.transform.position.z == agent.destination.z) {
-                GameObject.Destroy(targetIndicator);
-                targetIndicator = null;
-                lineRenderer.positionCount = 0;
-            } else {
-                lineRenderer.positionCount = agent.path.corners.Length;
-                lineRenderer.SetPositions(agent.path.corners);
+                Vector3 placement = new Vector3(clickPosition.point.x, 0.5f, clickPosition.point.z);
+                if (targetIndicator != null) {
+                    GameObject.Destroy(targetIndicator);
+                    lineRenderer.positionCount = 0;
+                }
+                targetIndicator = Instantiate(targetIndicatorPrefab, placement, Quaternion.identity);
+                NavMeshPath path = new NavMeshPath();
+                agent.CalculatePath(clickPosition.point, path);
+                lineRenderer.positionCount = path.corners.Length;
+                lineRenderer.SetPositions(path.corners);
             }
         }
     }
