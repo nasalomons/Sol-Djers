@@ -1,0 +1,34 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+/* Singleton class that manages the paused/unpaused state of the game. */
+public sealed class PauseManager : MonoBehaviour {
+    private static PauseManager pauseManager;
+    private bool paused;
+
+    public static PauseManager Instance {
+        get {
+            if(pauseManager == null) {
+                pauseManager = FindObjectOfType(typeof(PauseManager)) as PauseManager;  
+                pauseManager.SetUp();
+            }
+
+            return pauseManager;
+        }
+    }
+
+    private void SetUp() {
+        paused = false;
+    }
+
+    public bool IsPaused() {
+        return paused;
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            paused = paused ? false : true;
+        }
+    }
+}

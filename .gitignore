@@ -2,3 +2,5 @@ Library/
 Assembly-CSharp-Editor-firstpass.csproj
 Logs/
 Sol Djers.sln
+Temp/
+.vs/
