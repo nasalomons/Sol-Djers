@@ -12,6 +12,8 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
     private EventManager eventManager;
     private PauseManager pauseManager;
     private bool lastPauseStatus;
+    private Renderer rend;
+    private bool selected;
 
     public LineRenderer lineRenderer;
 
@@ -24,6 +26,7 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
         eventManager.Subscribe(this);
         pauseManager = PauseManager.Instance;
         lastPauseStatus = false;
+        rend = transform.gameObject.GetComponent<Renderer>();
     }
 
     void OnDisable() {
@@ -62,10 +65,29 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
 
         if (Input.GetMouseButtonDown(0)) {
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100)) {
+                if (clickPosition.transform.gameObject.tag == "Ally")
+                {
+                    Debug.Log("Hit the Player!");
+                    selected = true;
+                    rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+                    
+                }
+                else
+                {
+                    selected = false;
+                    rend.material.shader = Shader.Find("Diffuse");
+                }
+            }
+        }
+        else if (Input.GetMouseButton(1) && selected)
+        {
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100))
+            {
                 Action action = new Action("move", this, clickPosition.point);
                 eventManager.QueueAction(action);
                 Vector3 placement = new Vector3(clickPosition.point.x, 0.5f, clickPosition.point.z);
-                if (targetIndicator != null) {
+                if (targetIndicator != null)
+                {
                     GameObject.Destroy(targetIndicator);
                     lineRenderer.positionCount = 0;
                 }
