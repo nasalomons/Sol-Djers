@@ -14,6 +14,7 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
     private bool lastPauseStatus;
     private Renderer rend;
     private bool selected;
+    private Action currentAction;
 
     public LineRenderer lineRenderer;
 
@@ -56,6 +57,7 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
                     GameObject.Destroy(targetIndicator);
                     targetIndicator = null;
                     lineRenderer.positionCount = 0;
+                    currentAction = null;
                 } else {
                     lineRenderer.positionCount = agent.path.corners.Length;
                     lineRenderer.SetPositions(agent.path.corners);
@@ -76,6 +78,11 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
                 {
                     selected = false;
                     rend.material.shader = Shader.Find("Diffuse");
+                    if (targetIndicator != null) {
+                        GameObject.Destroy(targetIndicator);
+                        targetIndicator = null;
+                        lineRenderer.positionCount = 0;
+                    }
                 }
             }
         }
@@ -85,18 +92,31 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
             {
                 Action action = new Action("move", this, clickPosition.point);
                 eventManager.QueueAction(action);
-                Vector3 placement = new Vector3(clickPosition.point.x, 0.5f, clickPosition.point.z);
-                if (targetIndicator != null)
-                {
-                    GameObject.Destroy(targetIndicator);
-                    lineRenderer.positionCount = 0;
-                }
-                targetIndicator = Instantiate(targetIndicatorPrefab, placement, Quaternion.identity);
-                NavMeshPath path = new NavMeshPath();
-                agent.CalculatePath(clickPosition.point, path);
-                lineRenderer.positionCount = path.corners.Length;
-                lineRenderer.SetPositions(path.corners);
+                currentAction = action;
             }
+        }
+
+        if (selected) {
+            showAction();
+        }
+    }
+
+    private void showAction() {
+        if (currentAction == null) {
+            return;
+        }
+
+        if (currentAction.getName().Equals("move")) {
+            Vector3 placement = new Vector3(currentAction.getDestination().x, 0.5f, currentAction.getDestination().z);
+            if (targetIndicator != null) {
+                GameObject.Destroy(targetIndicator);
+                lineRenderer.positionCount = 0;
+            }
+            targetIndicator = Instantiate(targetIndicatorPrefab, placement, Quaternion.identity);
+            NavMeshPath path = new NavMeshPath();
+            agent.CalculatePath(currentAction.getDestination(), path);
+            lineRenderer.positionCount = path.corners.Length;
+            lineRenderer.SetPositions(path.corners);
         }
     }
 
