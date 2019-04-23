@@ -65,9 +65,10 @@
     <Compile Include="Assets\Scripts\DoorScript.cs" />
     <Compile Include="Assets\Scripts\EventManager.cs" />
     <Compile Include="Assets\Scripts\MeleeEnemyMovementScript.cs" />
-    <Compile Include="Assets\Scripts\PathfindingScript.cs" />
     <Compile Include="Assets\Scripts\PauseManager.cs" />
+    <Compile Include="Assets\Scripts\PlayerScript.cs" />
     <Compile Include="Assets\Scripts\RangedEnemyMovementScript.cs" />
+    <Compile Include="Assets\Scripts\TimeManager.cs" />
     <None Include="Assets\Sci-Fi Styled Modular Pack\Readme.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/nasal/Documents/college/comp sci/425/Sol Djers/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

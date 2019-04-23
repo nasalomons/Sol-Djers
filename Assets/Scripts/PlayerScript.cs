@@ -4,17 +4,25 @@ using UnityEngine;
 using UnityEngine.AI;
 using static EventManager;
 
-public class PathfindingScript : MonoBehaviour, ActionableGameObject {
+public class PlayerScript : MonoBehaviour, ActionableGameObject {
+
+    private readonly float ATTACK_RANGE = 2.5f;
     
     private NavMeshAgent agent;
+
     private GameObject targetIndicatorPrefab;
     private GameObject targetIndicator;
+
     private EventManager eventManager;
     private PauseManager pauseManager;
+    private TimeManager timeManager;
+
     private bool lastPauseStatus;
     private Renderer rend;
     private bool selected;
+
     private Action currentAction;
+    private long lastAttackTime;
 
     public LineRenderer lineRenderer;
 
@@ -26,8 +34,10 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
         eventManager = EventManager.Instance;
         eventManager.Subscribe(this);
         pauseManager = PauseManager.Instance;
+        timeManager = TimeManager.Instance;
         lastPauseStatus = false;
         rend = transform.gameObject.GetComponent<Renderer>();
+        lastAttackTime = 0;
     }
 
     void OnDisable() {
@@ -43,6 +53,7 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
                 lastPauseStatus = true;
                 agent.isStopped = true;
             }
+        
         } else {
             // If we aren't paused, but this still is
             if (lastPauseStatus) {
@@ -67,15 +78,12 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
 
         if (Input.GetMouseButtonDown(0)) {
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100)) {
-                if (clickPosition.transform.gameObject.tag == "Ally")
-                {
+                if (clickPosition.transform.gameObject.tag == "Ally") {
                     Debug.Log("Hit the Player!");
                     selected = true;
                     rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
-                    
-                }
-                else
-                {
+
+                } else {
                     selected = false;
                     rend.material.shader = Shader.Find("Diffuse");
                     if (targetIndicator != null) {
@@ -85,12 +93,17 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
                     }
                 }
             }
-        }
-        else if (Input.GetMouseButton(1) && selected)
-        {
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100))
-            {
-                Action action = new Action("move", this, clickPosition.point);
+        } else if (Input.GetMouseButton(1) && selected) {
+            bool click = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100);
+
+            if (click) {
+                Action action;
+                if (clickPosition.transform.gameObject.tag == "Enemy") {
+                    action = new Action("autoattack", this, clickPosition);                    
+                } else {
+                    action = new Action("move", this, clickPosition);                
+                }
+
                 eventManager.QueueAction(action);
                 currentAction = action;
             }
@@ -107,20 +120,20 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
         }
 
         if (currentAction.getName().Equals("move")) {
-            Vector3 placement = new Vector3(currentAction.getDestination().x, 0.5f, currentAction.getDestination().z);
+            Vector3 placement = new Vector3(currentAction.getDestination().point.x, 0.5f, currentAction.getDestination().point.z);
             if (targetIndicator != null) {
                 GameObject.Destroy(targetIndicator);
                 lineRenderer.positionCount = 0;
             }
             targetIndicator = Instantiate(targetIndicatorPrefab, placement, Quaternion.identity);
             NavMeshPath path = new NavMeshPath();
-            agent.CalculatePath(currentAction.getDestination(), path);
+            agent.CalculatePath(currentAction.getDestination().point, path);
             lineRenderer.positionCount = path.corners.Length;
             lineRenderer.SetPositions(path.corners);
         }
     }
 
-    private void DoMovementAction(Vector3 destination) {
+    private void DoMovementAction(Vector3 destination, Action nextAction) {
         agent.destination = destination;
         Vector3 placement = new Vector3(destination.x, 0.5f, destination.z);
         if (targetIndicator != null) {
@@ -130,11 +143,40 @@ public class PathfindingScript : MonoBehaviour, ActionableGameObject {
         targetIndicator = Instantiate(targetIndicatorPrefab, placement, Quaternion.identity);
         lineRenderer.positionCount = agent.path.corners.Length;
         lineRenderer.SetPositions(agent.path.corners);
+
+        if (nextAction != null) {
+            eventManager.QueueAction(nextAction);
+        }
+    }
+
+    private void DoAttackAction(Action action) {     
+        // if within attack range attack
+        if ((transform.position - action.getDestination().transform.gameObject.transform.position).magnitude <= ATTACK_RANGE) {
+            // stop moving
+            agent.destination = transform.position;
+
+            // if we havent attacked in 2 seconds
+            long currentTime = timeManager.getTimeSeconds();
+            if (currentTime - lastAttackTime >= 2) {
+                Debug.Log("attack at time " + currentTime);
+                lastAttackTime = currentTime;
+            }
+
+            // queue up next attack
+            eventManager.QueueAction(action);
+
+        // if not in range then move in range
+        } else {
+            Action newAction = new Action("move", this, action.getDestination(), action);
+            eventManager.QueueAction(newAction);
+        }
     }
 
     public void OnActionEvent(EventManager.Action action) {
         if (action.getName().Equals("move")) {
-            DoMovementAction(action.getDestination());
+            DoMovementAction(action.getDestination().point, action.getNextAction());
+        } else if (action.getName().Equals("autoattack")) {
+            DoAttackAction(action);
         }
     }
 }

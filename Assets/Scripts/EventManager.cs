@@ -12,20 +12,27 @@ public sealed class EventManager : MonoBehaviour {
     public class Action {
         private string name;
         private ActionableGameObject owner;
-        private Vector3 destination;
+        private RaycastHit destination;
+        private Action nextAction;
 
         public Action(string name, ActionableGameObject owner) {
             this.name = name;
             this.owner = owner;
         }
 
-        public Action(string name, ActionableGameObject owner, Vector3 destination) : this(name, owner) {
+        public Action(string name, ActionableGameObject owner, RaycastHit destination) : this(name, owner) {
             this.destination = destination;
+        }
+
+        public Action(string name, ActionableGameObject owner, RaycastHit destination, Action nextAction) : this(name, owner, destination) {
+            this.destination = destination;
+            this.nextAction = nextAction;
         }
 
         public string getName() { return name; }
         public ActionableGameObject getOwner() { return owner; }
-        public Vector3 getDestination() { return destination; }
+        public RaycastHit getDestination() { return destination; }
+        public Action getNextAction() { return nextAction; }
     }
 
     // Creating event with parameter
