@@ -61,8 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\ActionableGameObject.cs" />
+    <Compile Include="Assets\Scripts\AttackableGameObject.cs" />
+    <Compile Include="Assets\Scripts\AttackManager.cs" />
     <Compile Include="Assets\Scripts\CameraScript.cs" />
     <Compile Include="Assets\Scripts\DoorScript.cs" />
+    <Compile Include="Assets\Scripts\DummyScript.cs" />
     <Compile Include="Assets\Scripts\EventManager.cs" />
     <Compile Include="Assets\Scripts\MeleeEnemyMovementScript.cs" />
     <Compile Include="Assets\Scripts\PauseManager.cs" />
@@ -70,6 +73,7 @@
     <Compile Include="Assets\Scripts\RangedEnemyMovementScript.cs" />
     <Compile Include="Assets\Scripts\TimeManager.cs" />
     <None Include="Assets\Sci-Fi Styled Modular Pack\Readme.txt" />
+    <None Include="Assets\Scripts\CombatFlow.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/nasal/Documents/college/comp sci/425/Sol Djers/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

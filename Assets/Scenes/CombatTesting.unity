@@ -111,7 +111,7 @@ NavMeshSettings:
     accuratePlacement: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: 7b184d43c4ea5ba49a593f44fd15a16c, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 1cb3c29c6f7c3f4478308bd56b70e0a9, type: 2}
 --- !u!1 &31260939
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,6 +248,7 @@ GameObject:
   - component: {fileID: 110810733}
   - component: {fileID: 110810732}
   - component: {fileID: 110810735}
+  - component: {fileID: 110810736}
   m_Layer: 0
   m_Name: ManagerManager
   m_TagString: Untagged
@@ -303,6 +304,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27b37d6c0691b1847a647fa8c23f5785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &110810736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110810731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3704ff0024a695049a5f3df21248dbe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &170076733
@@ -698,6 +711,7 @@ GameObject:
   - component: {fileID: 1366615559}
   - component: {fileID: 1366615558}
   - component: {fileID: 1366615557}
+  - component: {fileID: 1366615560}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Enemy
@@ -777,6 +791,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1366615555}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1366615560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1366615555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57ac4bdeb05fada4b8d48cf00ed151f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1563116089
 GameObject:
   m_ObjectHideFlags: 0

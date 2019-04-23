@@ -1,0 +1,13 @@
+Basic idea of how player combat works:
+- Attacking:
+1. ActionableGameObject wants to attack
+2. Sends Action to EventManager to attack
+3. EventManger tells ONLY this ActionableGameObject when ready
+3. Gets callback in OnActionEvent()
+4. Sends Attack to AttackManger
+5. AttackManager sends info to ALL subscribed AttackableGameObjects
+6. Up to AttackableGameObjects to determine if they should take the attack in OnAttacked()
+
+- Being attacked:
+1. Enemy directly sends Attack to AttackManager (no dealing with EventManger)
+2. Player receives callback in OnAttacked() and determines if it should take damage

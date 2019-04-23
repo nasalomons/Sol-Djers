@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using static EventManager;
+using static AttackManager;
 
-public class PlayerScript : MonoBehaviour, ActionableGameObject {
+public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameObject {
 
     private readonly float ATTACK_RANGE = 2.5f;
     
@@ -16,6 +17,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject {
     private EventManager eventManager;
     private PauseManager pauseManager;
     private TimeManager timeManager;
+    private AttackManager attackManager;
 
     private bool lastPauseStatus;
     private Renderer rend;
@@ -24,6 +26,8 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject {
     private Action currentAction;
     private long lastAttackTime;
 
+    private float currentHealth;
+
     public LineRenderer lineRenderer;
 
     // Start is called before the first frame update
@@ -31,13 +35,19 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject {
         agent = GetComponent<NavMeshAgent>();
         targetIndicatorPrefab = Resources.Load("TargetPoint") as GameObject;
         targetIndicator = null;
+
         eventManager = EventManager.Instance;
         eventManager.Subscribe(this);
         pauseManager = PauseManager.Instance;
         timeManager = TimeManager.Instance;
+        attackManager = AttackManager.Instance;
+        attackManager.Subscribe(this);
+
         lastPauseStatus = false;
         rend = transform.gameObject.GetComponent<Renderer>();
         lastAttackTime = 0;
+
+        currentHealth = 100;
     }
 
     void OnDisable() {
@@ -149,9 +159,19 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject {
         }
     }
 
-    private void DoAttackAction(Action action) {     
+    private void DoAttackAction(Action action) {
+        GameObject targetObject = action.getDestination().transform.gameObject;
+        if (targetObject == null) {
+            return;
+        }
+
+        AttackableGameObject target = targetObject.GetComponent<AttackableGameObject>();
+        if (target == null) {
+            return;
+        }
+
         // if within attack range attack
-        if ((transform.position - action.getDestination().transform.gameObject.transform.position).magnitude <= ATTACK_RANGE) {
+        if ((transform.position - targetObject.transform.position).magnitude <= ATTACK_RANGE) {
             // stop moving
             agent.destination = transform.position;
 
@@ -159,6 +179,10 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject {
             long currentTime = timeManager.getTimeSeconds();
             if (currentTime - lastAttackTime >= 2) {
                 Debug.Log("attack at time " + currentTime);
+
+                Attack attack = new Attack("auto", target, 10);
+                attackManager.QueueAttack(attack);
+
                 lastAttackTime = currentTime;
             }
 
@@ -178,5 +202,9 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject {
         } else if (action.getName().Equals("autoattack")) {
             DoAttackAction(action);
         }
+    }
+
+    public void OnAttacked(AttackManager.Attack attack) {
+        currentHealth -= attack.getDamage();
     }
 }
