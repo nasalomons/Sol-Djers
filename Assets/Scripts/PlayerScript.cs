@@ -88,7 +88,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
 
         if (Input.GetMouseButtonDown(0)) {
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100)) {
-                if (clickPosition.transform.gameObject.tag == "Ally") {
+                if (clickPosition.transform.gameObject == gameObject) {
                     Debug.Log("Hit the Player!");
                     selected = true;
                     rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
@@ -164,12 +164,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
         if (target == null) {
             return;
         }
-
-        //AttackableGameObject target = targetObject.GetComponent<AttackableGameObject>();
-        //if (target == null) {
-           // return;
-        //}
-
+        
         // if within attack range attack
         if ((transform.position - target.transform.position).magnitude <= ATTACK_RANGE) {
             // stop moving
