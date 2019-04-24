@@ -13,6 +13,8 @@ public class DummyScript : MonoBehaviour, AttackableGameObject {
     }
 
     public void OnAttacked(AttackManager.Attack attack) {
-        Debug.Log("dummy was attacked " + ++count);
+        if (attack.getTarget() == gameObject) {
+            Debug.Log("dummy was attacked " + ++count);
+        }
     }
 }

@@ -160,18 +160,18 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
     }
 
     private void DoAttackAction(Action action) {
-        GameObject targetObject = action.getDestination().transform.gameObject;
-        if (targetObject == null) {
-            return;
-        }
-
-        AttackableGameObject target = targetObject.GetComponent<AttackableGameObject>();
+        GameObject target = action.getDestination().transform.gameObject;
         if (target == null) {
             return;
         }
 
+        //AttackableGameObject target = targetObject.GetComponent<AttackableGameObject>();
+        //if (target == null) {
+           // return;
+        //}
+
         // if within attack range attack
-        if ((transform.position - targetObject.transform.position).magnitude <= ATTACK_RANGE) {
+        if ((transform.position - target.transform.position).magnitude <= ATTACK_RANGE) {
             // stop moving
             agent.destination = transform.position;
 
@@ -180,7 +180,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
             if (currentTime - lastAttackTime >= 2) {
                 Debug.Log("attack at time " + currentTime);
 
-                Attack attack = new Attack("auto", target, 10);
+                Attack attack = new Attack("auto", gameObject, target, 10);
                 attackManager.QueueAttack(attack);
 
                 lastAttackTime = currentTime;
@@ -205,6 +205,8 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
     }
 
     public void OnAttacked(AttackManager.Attack attack) {
-        currentHealth -= attack.getDamage();
+        if (attack.getTarget() == gameObject) {
+            currentHealth -= attack.getDamage();
+        }
     }
 }

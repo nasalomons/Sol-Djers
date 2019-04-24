@@ -8,24 +8,29 @@ public sealed class AttackManager : MonoBehaviour {
 
     public class Attack {
         private string name;
-        private AttackableGameObject target;
+        private GameObject owner;
+        private GameObject target;
         private float damage;
         private Object effectData;
 
-        public Attack(string name, AttackableGameObject target, float damage) {
+        public Attack(string name, GameObject owner, GameObject target, float damage) {
             this.name = name;
+            this.owner = owner;
             this.target = target;
             this.damage = damage;
         }
 
-        public Attack(string name, AttackableGameObject target, float damage, Object effectData) : this(name, target, damage) {
+        public Attack(string name, GameObject owner, GameObject target, float damage, Object effectData) : this(name, owner, target, damage) {
             this.effectData = effectData;
         }
 
         public string getName() {
             return name;
         }
-        public AttackableGameObject getTarget() {
+        public GameObject getOwner() {
+            return owner;
+        }
+        public GameObject getTarget() {
             return target;
         }
         public float getDamage() {
@@ -64,7 +69,17 @@ public sealed class AttackManager : MonoBehaviour {
         pauseManager = PauseManager.Instance;
     }
 
-    public void QueueAttack(Attack attack) {        
+    public void QueueAttack(Attack attack) {
+        List<int> indexList = new List<int>();
+        foreach (Attack queued in attackQueue) {
+            if (queued.getOwner().Equals(attack.getOwner())) {
+                indexList.Add(attackQueue.IndexOf(queued));
+            }
+        }
+        foreach (int index in indexList) {
+            attackQueue.RemoveAt(index);
+        }
+
         // Add attack to the end of the queue
         attackQueue.Add(attack);
     }

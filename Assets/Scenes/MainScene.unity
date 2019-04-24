@@ -798,6 +798,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ToonBot(Free) (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 122752, guid: 11561786059d13346b9af9be81fcbed2, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 422752, guid: 11561786059d13346b9af9be81fcbed2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 54.26
@@ -1400,6 +1404,7 @@ GameObject:
   - component: {fileID: 282388980}
   - component: {fileID: 282388979}
   - component: {fileID: 282388978}
+  - component: {fileID: 282388981}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Enemy
@@ -1479,6 +1484,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 282388976}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &282388981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 282388976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57ac4bdeb05fada4b8d48cf00ed151f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &329549918
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2731,6 +2748,7 @@ GameObject:
   - component: {fileID: 1196794456}
   - component: {fileID: 1196794455}
   - component: {fileID: 1196794454}
+  - component: {fileID: 1196794458}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Enemy
@@ -2810,6 +2828,18 @@ Transform:
   m_Father: {fileID: 1459414424}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1196794458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1196794453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57ac4bdeb05fada4b8d48cf00ed151f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1219490406
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2891,6 +2921,7 @@ GameObject:
   - component: {fileID: 1276769668}
   - component: {fileID: 1276769667}
   - component: {fileID: 1276769670}
+  - component: {fileID: 1276769671}
   m_Layer: 0
   m_Name: ManagerManager
   m_TagString: Untagged
@@ -2946,6 +2977,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27b37d6c0691b1847a647fa8c23f5785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1276769671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276769666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3704ff0024a695049a5f3df21248dbe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1305733814 stripped
@@ -3247,6 +3290,10 @@ PrefabInstance:
     - target: {fileID: 122752, guid: 11561786059d13346b9af9be81fcbed2, type: 3}
       propertyPath: m_Name
       value: ToonBot(Free)
+      objectReference: {fileID: 0}
+    - target: {fileID: 122752, guid: 11561786059d13346b9af9be81fcbed2, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 422752, guid: 11561786059d13346b9af9be81fcbed2, type: 3}
       propertyPath: m_LocalPosition.x
