@@ -26,7 +26,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
     private Action currentAction;
     private long lastAttackTime;
 
-    private float currentHealth;
+    private HealthScript health;
 
     public LineRenderer lineRenderer;
 
@@ -47,7 +47,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
         rend = transform.gameObject.GetComponent<Renderer>();
         lastAttackTime = 0;
 
-        currentHealth = 100;
+        health = gameObject.GetComponent<HealthScript>();
     }
 
     void OnDisable() {
@@ -56,7 +56,6 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
 
     // Update is called once per frame
     void Update() {
-
         if (pauseManager.IsPaused()) {
             // If we are now paused, and this isn't paused yet
             if (!lastPauseStatus) {
@@ -121,7 +120,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
 
         if (selected) {
             showAction();
-        }
+        }        
     }
 
     private void showAction() {
@@ -201,7 +200,11 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
 
     public void OnAttacked(AttackManager.Attack attack) {
         if (attack.getTarget() == gameObject) {
-            currentHealth -= attack.getDamage();
+            if (health.TakeDamage(attack.getDamage())) {
+                // alive
+            } else {
+                // dead
+            }
         }
     }
 }

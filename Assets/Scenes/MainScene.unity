@@ -213,7 +213,7 @@ Transform:
   - {fileID: 1459414424}
   - {fileID: 185288928}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &41765713
 PrefabInstance:
@@ -860,6 +860,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11422754, guid: 11561786059d13346b9af9be81fcbed2, type: 3}
+    - {fileID: 1711044941235936312, guid: 11561786059d13346b9af9be81fcbed2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 11561786059d13346b9af9be81fcbed2, type: 3}
 --- !u!4 &185288928 stripped
 Transform:
@@ -1175,6 +1176,7 @@ GameObject:
   - component: {fileID: 272865510}
   - component: {fileID: 272865509}
   - component: {fileID: 272865508}
+  - component: {fileID: 272865514}
   m_Layer: 0
   m_Name: Character1
   m_TagString: Ally
@@ -1289,6 +1291,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &272865514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272865507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dacbc7e887d0fbc44ada179ed6ba0fb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
 --- !u!1001 &274378099
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1405,6 +1420,7 @@ GameObject:
   - component: {fileID: 282388979}
   - component: {fileID: 282388978}
   - component: {fileID: 282388981}
+  - component: {fileID: 282388982}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Enemy
@@ -1496,6 +1512,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57ac4bdeb05fada4b8d48cf00ed151f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &282388982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 282388976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dacbc7e887d0fbc44ada179ed6ba0fb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 999
 --- !u!1001 &329549918
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2749,6 +2778,7 @@ GameObject:
   - component: {fileID: 1196794455}
   - component: {fileID: 1196794454}
   - component: {fileID: 1196794458}
+  - component: {fileID: 1196794459}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Enemy
@@ -2840,6 +2870,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57ac4bdeb05fada4b8d48cf00ed151f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1196794459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1196794453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dacbc7e887d0fbc44ada179ed6ba0fb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 999
 --- !u!1001 &1219490406
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3351,8 +3394,14 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.20000002
       objectReference: {fileID: 0}
+    - target: {fileID: 1711044941235936312, guid: 11561786059d13346b9af9be81fcbed2,
+        type: 3}
+      propertyPath: maxHealth
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11422754, guid: 11561786059d13346b9af9be81fcbed2, type: 3}
+    - {fileID: 1711044941235936312, guid: 11561786059d13346b9af9be81fcbed2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 11561786059d13346b9af9be81fcbed2, type: 3}
 --- !u!4 &1459414424 stripped
 Transform:
@@ -3502,6 +3551,72 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1467973296}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1482046638
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1482046641}
+  - component: {fileID: 1482046640}
+  - component: {fileID: 1482046639}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1482046639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482046638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1077351063, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &1482046640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482046638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!4 &1482046641
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482046638}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1493956914
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3780,7 +3895,7 @@ Transform:
   - {fileID: 2060695340}
   - {fileID: 1800192021}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1622497832 stripped
 GameObject:

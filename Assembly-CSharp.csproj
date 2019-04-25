@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\DoorScript.cs" />
     <Compile Include="Assets\Scripts\DummyScript.cs" />
     <Compile Include="Assets\Scripts\EventManager.cs" />
+    <Compile Include="Assets\Scripts\HealthScript.cs" />
     <Compile Include="Assets\Scripts\MeleeEnemyMovementScript.cs" />
     <Compile Include="Assets\Scripts\PauseManager.cs" />
     <Compile Include="Assets\Scripts\PlayerScript.cs" />
