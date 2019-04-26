@@ -26,7 +26,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
     private Action currentAction;
     private long lastAttackTime;
 
-    private HealthScript health;
+    private HealthScript overhead;
 
     public LineRenderer lineRenderer;
 
@@ -47,7 +47,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
         rend = transform.gameObject.GetComponent<Renderer>();
         lastAttackTime = 0;
 
-        health = gameObject.GetComponent<HealthScript>();
+        overhead = gameObject.GetComponent<HealthScript>();
     }
 
     void OnDisable() {
@@ -78,6 +78,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
                     targetIndicator = null;
                     lineRenderer.positionCount = 0;
                     currentAction = null;
+                    showAction();
                 } else {
                     lineRenderer.positionCount = agent.path.corners.Length;
                     lineRenderer.SetPositions(agent.path.corners);
@@ -114,7 +115,9 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
                 }
 
                 eventManager.QueueAction(action);
-                currentAction = action;
+                if (pauseManager.IsPaused()) {
+                    currentAction = action;
+                }
             }
         }
 
@@ -125,26 +128,31 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
 
     private void showAction() {
         if (currentAction == null) {
-            return;
-        }
+            overhead.updateAction(HealthScript.CurrentAction.NONE);
+        } else {
+            if (currentAction.getName().Equals("move")) {
+                Vector3 placement = new Vector3(currentAction.getDestination().point.x, 0.5f, currentAction.getDestination().point.z);
+                if (targetIndicator != null) {
+                    GameObject.Destroy(targetIndicator);
+                    lineRenderer.positionCount = 0;
+                }
+                targetIndicator = Instantiate(targetIndicatorPrefab, placement, Quaternion.identity);
+                NavMeshPath path = new NavMeshPath();
+                agent.CalculatePath(currentAction.getDestination().point, path);
+                lineRenderer.positionCount = path.corners.Length;
+                lineRenderer.SetPositions(path.corners);
 
-        if (currentAction.getName().Equals("move")) {
-            Vector3 placement = new Vector3(currentAction.getDestination().point.x, 0.5f, currentAction.getDestination().point.z);
-            if (targetIndicator != null) {
-                GameObject.Destroy(targetIndicator);
-                lineRenderer.positionCount = 0;
+                overhead.updateAction(HealthScript.CurrentAction.MOVE);
+            } else if (currentAction.getName().Equals("autoattack")) {
+                overhead.updateAction(HealthScript.CurrentAction.ATTACK);
             }
-            targetIndicator = Instantiate(targetIndicatorPrefab, placement, Quaternion.identity);
-            NavMeshPath path = new NavMeshPath();
-            agent.CalculatePath(currentAction.getDestination().point, path);
-            lineRenderer.positionCount = path.corners.Length;
-            lineRenderer.SetPositions(path.corners);
         }
     }
 
-    private void DoMovementAction(Vector3 destination, Action nextAction) {
-        agent.destination = destination;
-        Vector3 placement = new Vector3(destination.x, 0.5f, destination.z);
+    private void DoMovementAction(Action action, Action nextAction) {
+        currentAction = action;
+        agent.destination = action.getDestination().point;
+        Vector3 placement = new Vector3(action.getDestination().point.x, 0.5f, action.getDestination().point.z);
         if (targetIndicator != null) {
             GameObject.Destroy(targetIndicator);
             lineRenderer.positionCount = 0;
@@ -166,6 +174,8 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
         
         // if within attack range attack
         if ((transform.position - target.transform.position).magnitude <= ATTACK_RANGE) {
+            currentAction = action;
+
             // stop moving
             agent.destination = transform.position;
 
@@ -192,15 +202,16 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
 
     public void OnActionEvent(EventManager.Action action) {
         if (action.getName().Equals("move")) {
-            DoMovementAction(action.getDestination().point, action.getNextAction());
+            DoMovementAction(action, action.getNextAction());
         } else if (action.getName().Equals("autoattack")) {
             DoAttackAction(action);
         }
+        showAction();
     }
 
     public void OnAttacked(AttackManager.Attack attack) {
         if (attack.getTarget() == gameObject) {
-            if (health.TakeDamage(attack.getDamage())) {
+            if (overhead.TakeDamage(attack.getDamage())) {
                 // alive
             } else {
                 // dead
