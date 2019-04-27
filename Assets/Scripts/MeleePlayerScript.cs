@@ -121,6 +121,18 @@ public class MeleePlayerScript : MonoBehaviour, ActionableGameObject, Attackable
                 if (pauseManager.IsPaused()) {
                     currentAction = action;
                 }
+            } 
+        } else if (Input.GetKeyUp(KeyCode.Alpha1)) {
+            selected = true;
+            rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+            mainCamera.setPlayer(this.gameObject);
+        } else if (Input.GetKeyUp(KeyCode.Alpha2)) {
+            selected = false;
+            rend.material.shader = Shader.Find("Diffuse");
+            if (targetIndicator != null) {
+                GameObject.Destroy(targetIndicator);
+                targetIndicator = null;
+                lineRenderer.positionCount = 0;
             }
         }
 

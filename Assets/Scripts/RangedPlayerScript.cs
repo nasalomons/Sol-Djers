@@ -124,6 +124,18 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
                     currentAction = action;
                 }
             }
+        } else if (Input.GetKeyUp(KeyCode.Alpha2)) {
+            selected = true;
+            rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+            mainCamera.setPlayer(this.gameObject);
+        } else if (Input.GetKeyUp(KeyCode.Alpha1)) {
+            selected = false;
+            rend.material.shader = Shader.Find("Diffuse");
+            if (targetIndicator != null) {
+                GameObject.Destroy(targetIndicator);
+                targetIndicator = null;
+                lineRenderer.positionCount = 0;
+            }
         }
 
         if (selected) {
