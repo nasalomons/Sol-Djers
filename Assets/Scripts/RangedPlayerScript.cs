@@ -5,14 +5,16 @@ using UnityEngine.AI;
 using static EventManager;
 using static AttackManager;
 
-public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameObject {
+public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameObject {
 
-    private readonly float ATTACK_RANGE = 2.5f;
-    
+    private readonly float ATTACK_RANGE = 6f;
+
     private NavMeshAgent agent;
+    private CameraScript mainCamera;
 
     private GameObject targetIndicatorPrefab;
     private GameObject targetIndicator;
+    private GameObject autoAttackPrefab;
 
     private EventManager eventManager;
     private PauseManager pauseManager;
@@ -33,8 +35,11 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
     // Start is called before the first frame update
     void Start() {
         agent = GetComponent<NavMeshAgent>();
+        mainCamera = Camera.main.GetComponent<CameraScript>();
+
         targetIndicatorPrefab = Resources.Load("TargetPoint") as GameObject;
         targetIndicator = null;
+        autoAttackPrefab = Resources.Load("RangedAutoAttack") as GameObject;
 
         eventManager = EventManager.Instance;
         eventManager.Subscribe(this);
@@ -62,7 +67,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
                 lastPauseStatus = true;
                 agent.isStopped = true;
             }
-        
+
         } else {
             // If we aren't paused, but this still is
             if (lastPauseStatus) {
@@ -92,7 +97,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
                     Debug.Log("Hit the Player!");
                     selected = true;
                     rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
-
+                    mainCamera.setPlayer(this.gameObject);
                 } else {
                     selected = false;
                     rend.material.shader = Shader.Find("Diffuse");
@@ -109,9 +114,9 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
             if (click) {
                 Action action;
                 if (clickPosition.transform.gameObject.tag == "Enemy") {
-                    action = new Action("autoattack", this, clickPosition);                    
+                    action = new Action("autoattack", this, clickPosition);
                 } else {
-                    action = new Action("move", this, clickPosition);                
+                    action = new Action("move", this, clickPosition);
                 }
 
                 eventManager.QueueAction(action);
@@ -123,7 +128,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
 
         if (selected) {
             showAction();
-        }        
+        }
     }
 
     private void showAction() {
@@ -144,6 +149,11 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
 
                 overhead.updateAction(HealthScript.CurrentAction.MOVE);
             } else if (currentAction.getName().Equals("autoattack")) {
+                if (targetIndicator != null) {
+                    GameObject.Destroy(targetIndicator);
+                    targetIndicator = null;
+                    lineRenderer.positionCount = 0;
+                }
                 overhead.updateAction(HealthScript.CurrentAction.ATTACK);
             }
         }
@@ -171,7 +181,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
         if (target == null) {
             return;
         }
-        
+
         // if within attack range attack
         if ((transform.position - target.transform.position).magnitude <= ATTACK_RANGE) {
             currentAction = action;
@@ -185,7 +195,8 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
                 Debug.Log("attack at time " + currentTime);
 
                 Attack attack = new Attack("auto", gameObject, target, 10);
-                attackManager.QueueAttack(attack);
+                GameObject autoAttack = Instantiate(autoAttackPrefab, transform.position + transform.forward * 1.5f, transform.rotation);
+                autoAttack.GetComponent<ProjectileScript>().setAttack(attack);
 
                 lastAttackTime = currentTime;
             }
@@ -193,7 +204,7 @@ public class PlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameO
             // queue up next attack
             eventManager.QueueAction(action);
 
-        // if not in range then move in range
+            // if not in range then move in range
         } else {
             Action newAction = new Action("move", this, action.getDestination(), action);
             eventManager.QueueAction(newAction);

@@ -10,4 +10,8 @@ public class CameraScript : MonoBehaviour {
     void Update() {
         transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 15, player.transform.position.z - 9);
     }
+
+    public void setPlayer(GameObject player) {
+        this.player = player;
+    }
 }
