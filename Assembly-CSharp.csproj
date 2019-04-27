@@ -90,6 +90,7 @@
     <None Include="Assets\VolumetricLines\Shaders\Additive.shader" />
     <None Include="Assets\VolumetricLines\Shaders\AlphaBlended.shader" />
     <None Include="Assets\VolumetricLines\Shaders\Strip-Additive.shader" />
+    <None Include="Assets\Scripts\SpellList.txt" />
     <None Include="Assets\VolumetricLines\Shaders\Fast-AlphaBlended.shader" />
     <None Include="Assets\VolumetricLines\Shaders\Strip-AlphaBlended.shader" />
     <None Include="Assets\VolumetricLines\Shaders\Fast-Additive.shader" />

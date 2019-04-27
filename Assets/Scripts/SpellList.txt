@@ -1,0 +1,13 @@
+- Knockback - Push enemies within a certain radius away
+
+- Push - Push an enemy away
+
+- Stun - Attack/projectile that stuns
+
+- Heal - Heal an ally
+
+- Splitting Projectile - Shoot a projectile that splits upon hitting an enemy sending perpendicular bolts that also hurt enemies
+
+- AoE attack - Some circular AoE
+
+- Charge - Quickly run at an enemy and deal damage upon reaching them
