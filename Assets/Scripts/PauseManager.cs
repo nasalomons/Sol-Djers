@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /* Singleton class that manages the paused/unpaused state of the game. */
 public sealed class PauseManager : MonoBehaviour {
+    public GameObject pausedText;
+
     private static PauseManager pauseManager;
     private bool paused;
 
@@ -29,6 +32,12 @@ public sealed class PauseManager : MonoBehaviour {
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             paused = paused ? false : true;
+            if (paused) {
+                pausedText.SetActive(true);
+            } else {
+                pausedText.SetActive(false);
+            }
+              
         }
     }
 }
