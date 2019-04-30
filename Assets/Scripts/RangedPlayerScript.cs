@@ -29,6 +29,7 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
     private long lastAttackTime;
 
     private HealthScript overhead;
+    private bool isDead;
 
     private Ability[] abilityList;
 
@@ -55,6 +56,7 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
         lastAttackTime = 0;
 
         overhead = gameObject.GetComponent<HealthScript>();
+        isDead = false;
 
         abilityList = GetComponents<Ability>();
     }
@@ -152,6 +154,10 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
         }
     }
 
+    public bool IsDead() {
+        return isDead;
+    }
+
     private void showAction() {
         if (currentAction == null) {
             overhead.updateAction(HealthScript.CurrentAction.NONE);
@@ -209,6 +215,7 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
 
             // stop moving
             agent.destination = transform.position;
+            transform.LookAt(target.transform.position);
 
             // if we havent attacked in 2 seconds
             long currentTime = timeManager.getTimeSeconds();
@@ -247,11 +254,17 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
     }
 
     public void OnAttacked(AttackManager.Attack attack) {
-        if (attack.getTarget() == gameObject) {
+        if (attack.getTarget().Equals(gameObject)) {
             if (overhead.TakeDamage(attack.getDamage())) {
                 // alive
+                if (attack.getAbility() != null) {
+                    attack.getAbility().DoAbilityEffect(gameObject);
+                }
             } else {
                 // dead
+                isDead = true;
+                eventManager.Unsubscribe(this);
+                attackManager.Unsubscribe(this);
             }
         }
     }

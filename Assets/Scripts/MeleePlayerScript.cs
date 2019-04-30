@@ -28,6 +28,7 @@ public class MeleePlayerScript : MonoBehaviour, ActionableGameObject, Attackable
     private long lastAttackTime;
 
     private HealthScript overhead;
+    private bool isDead;
 
     public LineRenderer lineRenderer;
 
@@ -51,6 +52,7 @@ public class MeleePlayerScript : MonoBehaviour, ActionableGameObject, Attackable
         lastAttackTime = 0;
 
         overhead = gameObject.GetComponent<HealthScript>();
+        isDead = false;
     }
 
     void OnDisable() {
@@ -139,6 +141,10 @@ public class MeleePlayerScript : MonoBehaviour, ActionableGameObject, Attackable
         if (selected) {
             showAction();
         }        
+    }
+
+    public bool IsDead() {
+        return isDead;
     }
 
     private void showAction() {
@@ -230,11 +236,17 @@ public class MeleePlayerScript : MonoBehaviour, ActionableGameObject, Attackable
     }
 
     public void OnAttacked(AttackManager.Attack attack) {
-        if (attack.getTarget() == gameObject) {
+        if (attack.getTarget().Equals(gameObject)) {
             if (overhead.TakeDamage(attack.getDamage())) {
                 // alive
+                if (attack.getAbility() != null) {
+                    attack.getAbility().DoAbilityEffect(gameObject);
+                }
             } else {
                 // dead
+                isDead = true;
+                eventManager.Unsubscribe(this);
+                attackManager.Unsubscribe(this);
             }
         }
     }
