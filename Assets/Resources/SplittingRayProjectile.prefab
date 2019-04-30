@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 2397960}
   - component: {fileID: 3305964}
   - component: {fileID: 11475718}
-  - component: {fileID: 330599880745410945}
+  - component: {fileID: 5192139171116257477}
   m_Layer: 0
-  m_Name: RangedAutoAttack
+  m_Name: SplittingRayProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,10 +95,10 @@ MonoBehaviour:
   m_doNotOverwriteTemplateMaterialProperties: 0
   m_startPos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 55}
-  m_lineColor: {r: 0, g: 1, b: 1, a: 1}
+  m_lineColor: {r: 1, g: 0, b: 0.16862774, a: 1}
   m_lineWidth: 60
   m_lightSaberFactor: 0.8
---- !u!114 &330599880745410945
+--- !u!114 &5192139171116257477
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,6 +107,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 122648}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0d709cecdae55d44b4c53a4b7b9d98d, type: 3}
+  m_Script: {fileID: 11500000, guid: 0273c75b30484f44d9ff812bc139b8b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

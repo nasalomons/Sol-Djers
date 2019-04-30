@@ -25,7 +25,6 @@ public sealed class EventManager : MonoBehaviour {
         }
 
         public Action(string name, ActionableGameObject owner, RaycastHit destination, Action nextAction) : this(name, owner, destination) {
-            this.destination = destination;
             this.nextAction = nextAction;
         }
 
@@ -36,7 +35,7 @@ public sealed class EventManager : MonoBehaviour {
     }
 
     // Creating event with parameter
-    private class ActionEvent : UnityEvent<Action> {}
+    private class ActionEvent : UnityEvent<Action> { }
 
     // Singleton of this event manager
     private static EventManager eventManager;
@@ -65,7 +64,7 @@ public sealed class EventManager : MonoBehaviour {
 
     public bool QueueAction(Action action) {
         // If the owner of the action isn't subscribed, don't enqueue it
-        if (!eventMap.ContainsKey(action.getOwner())) {
+        if (action == null || !eventMap.ContainsKey(action.getOwner())) {
             return false;
         }
 

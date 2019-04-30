@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using static AttackManager;
 
-public class ProjectileScript : MonoBehaviour {
+public abstract class TargetedProjectileScript : MonoBehaviour {
     private Attack attack;
     private AttackManager attackManager;
     private PauseManager pauseManager;
 
-    private void Start() {
+    protected private void Start() {
         attackManager = AttackManager.Instance;
         pauseManager = PauseManager.Instance;
     }
@@ -20,6 +20,7 @@ public class ProjectileScript : MonoBehaviour {
             transform.LookAt(target.transform);
 
             if ((transform.position - target.transform.position).magnitude < 0.3) {
+                DoOtherEffects(attack);
                 attackManager.QueueAttack(attack);
                 Destroy(gameObject);
             }
@@ -29,4 +30,7 @@ public class ProjectileScript : MonoBehaviour {
     public void setAttack(Attack attack) {
         this.attack = attack;
     }
+
+    // Should only be called from within this method.
+    protected abstract void DoOtherEffects(Attack attack);
 }

@@ -18,6 +18,9 @@ public class DummyScript : MonoBehaviour, AttackableGameObject {
         if (attack.getTarget() == gameObject) {
             Debug.Log("dummy was attacked " + ++count);
             healthBar.TakeDamage(attack.getDamage());
+            if (attack.getAbility() != null) {
+                attack.getAbility().DoAbilityEffect(gameObject);
+            }
         }
     }
 }

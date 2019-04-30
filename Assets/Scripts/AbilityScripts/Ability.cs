@@ -11,17 +11,25 @@ public abstract class Ability : MonoBehaviour {
 
     private float lastAttackTime;
 
-    void Start() {
+    protected void Start() {
         timeManager = TimeManager.Instance;
         attackManager = AttackManager.Instance;
         lastAttackTime = -cooldown;
     }
 
     public bool IsCastable() {
-        return timeManager.getTimeSeconds() - lastAttackTime > cooldown;
+        return timeManager.getTimeSeconds() - lastAttackTime >= cooldown;
+    }
+
+    public void AbilityCasted() {
+        lastAttackTime = timeManager.getTimeSeconds();
     }
 
     // This function should be called after an ActionableGameObject is told it can use the ability by the EventManager. 
     // This function will send the ability information to the AttackManager.
-    public abstract void DoAbility(GameObject owner, GameObject target);
+    // Call AbilityCasted() at the end.
+    public abstract void CastAbility(GameObject owner, GameObject target);
+
+    // This function should be called by the affected target of an ability
+    public abstract void DoAbilityEffect(GameObject target);
 }

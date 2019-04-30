@@ -11,7 +11,7 @@ public sealed class AttackManager : MonoBehaviour {
         private GameObject owner;
         private GameObject target;
         private float damage;
-        private Object effectData;
+        private Ability ability;
 
         public Attack(string name, GameObject owner, GameObject target, float damage) {
             this.name = name;
@@ -20,8 +20,8 @@ public sealed class AttackManager : MonoBehaviour {
             this.damage = damage;
         }
 
-        public Attack(string name, GameObject owner, GameObject target, float damage, Object effectData) : this(name, owner, target, damage) {
-            this.effectData = effectData;
+        public Attack(string name, GameObject owner, GameObject target, float damage, Ability ability) : this(name, owner, target, damage) {
+            this.ability = ability;
         }
 
         public string getName() {
@@ -36,8 +36,8 @@ public sealed class AttackManager : MonoBehaviour {
         public float getDamage() {
             return damage;
         }
-        public Object getEffectData() {
-            return effectData;
+        public Ability getAbility() {
+            return ability;
         }
     }
 

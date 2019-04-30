@@ -30,6 +30,8 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
 
     private HealthScript overhead;
 
+    private Ability[] abilityList;
+
     public LineRenderer lineRenderer;
 
     // Start is called before the first frame update
@@ -53,6 +55,8 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
         lastAttackTime = 0;
 
         overhead = gameObject.GetComponent<HealthScript>();
+
+        abilityList = GetComponents<Ability>();
     }
 
     void OnDisable() {
@@ -112,18 +116,23 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
             bool click = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100);
 
             if (click) {
-                Action action;
+                Action action = null;
                 if (clickPosition.transform.gameObject.tag == "Enemy") {
                     action = new Action("autoattack", this, clickPosition);
+                    //if (abilityList[0].IsCastable()) {
+                    //    action = new Action("ability0", this, clickPosition);
+                    //}
                 } else {
                     action = new Action("move", this, clickPosition);
                 }
 
                 eventManager.QueueAction(action);
+
                 if (pauseManager.IsPaused()) {
                     currentAction = action;
                 }
             }
+
         } else if (Input.GetKeyUp(KeyCode.Alpha2)) {
             selected = true;
             rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
@@ -167,7 +176,7 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
                     lineRenderer.positionCount = 0;
                 }
                 overhead.updateAction(HealthScript.CurrentAction.ATTACK);
-            }
+            } 
         }
     }
 
@@ -208,7 +217,7 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
 
                 Attack attack = new Attack("auto", gameObject, target, 10);
                 GameObject autoAttack = Instantiate(autoAttackPrefab, transform.position + transform.forward * 1.5f, transform.rotation);
-                autoAttack.GetComponent<ProjectileScript>().setAttack(attack);
+                autoAttack.GetComponent<RangedAutoAttackProjectile>().setAttack(attack);
 
                 lastAttackTime = currentTime;
             }
@@ -228,6 +237,11 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
             DoMovementAction(action, action.getNextAction());
         } else if (action.getName().Equals("autoattack")) {
             DoAttackAction(action);
+        } else if (action.getName().Equals("ability0")) {
+            GameObject target = action.getDestination().transform.gameObject;
+            if (target != null) {
+                abilityList[0].CastAbility(gameObject, target);
+            }            
         }
         showAction();
     }

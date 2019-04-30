@@ -60,22 +60,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Ability.cs" />
+    <Compile Include="Assets\Scripts\AbilityScripts\Ability.cs" />
+    <Compile Include="Assets\Scripts\AbilityScripts\SplittingRayAbility.cs" />
     <Compile Include="Assets\Scripts\ActionableGameObject.cs" />
     <Compile Include="Assets\Scripts\AttackableGameObject.cs" />
-    <Compile Include="Assets\Scripts\AttackManager.cs" />
     <Compile Include="Assets\Scripts\CameraScript.cs" />
     <Compile Include="Assets\Scripts\DoorScript.cs" />
     <Compile Include="Assets\Scripts\DummyScript.cs" />
-    <Compile Include="Assets\Scripts\EventManager.cs" />
     <Compile Include="Assets\Scripts\HealthScript.cs" />
+    <Compile Include="Assets\Scripts\Managers\AttackManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\EventManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\PauseManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\TimeManager.cs" />
     <Compile Include="Assets\Scripts\MeleeEnemyMovementScript.cs" />
     <Compile Include="Assets\Scripts\MeleePlayerScript.cs" />
-    <Compile Include="Assets\Scripts\PauseManager.cs" />
-    <Compile Include="Assets\Scripts\ProjectileScript.cs" />
+    <Compile Include="Assets\Scripts\ProjectileScripts\RangedAutoAttackProjectile.cs" />
+    <Compile Include="Assets\Scripts\ProjectileScripts\SplittingRayProjectileScript.cs" />
+    <Compile Include="Assets\Scripts\ProjectileScripts\SplittingRaySubProjectileScript.cs" />
+    <Compile Include="Assets\Scripts\ProjectileScripts\TargetedProjectileScript.cs" />
     <Compile Include="Assets\Scripts\RangedEnemyMovementScript.cs" />
     <Compile Include="Assets\Scripts\RangedPlayerScript.cs" />
-    <Compile Include="Assets\Scripts\TimeManager.cs" />
     <Compile Include="Assets\VolumetricLines\ExampleScenes\ExampleScripts\CannonBehavior.cs" />
     <Compile Include="Assets\VolumetricLines\ExampleScenes\ExampleScripts\CreateSinShapedLineStrip.cs" />
     <Compile Include="Assets\VolumetricLines\ExampleScenes\ExampleScripts\ShotBehavior.cs" />
@@ -87,11 +91,11 @@
     <Compile Include="Assets\VolumetricLines\Scripts\VolumetricMultiLineBehavior.cs" />
     <None Include="Assets\VolumetricLines\Shaders\_StripShader.cginc" />
     <None Include="Assets\Sci-Fi Styled Modular Pack\Readme.txt" />
-    <None Include="Assets\Scripts\CombatFlow.txt" />
+    <None Include="Assets\Scripts\Managers\CombatFlow.txt" />
     <None Include="Assets\VolumetricLines\Shaders\Additive.shader" />
     <None Include="Assets\VolumetricLines\Shaders\AlphaBlended.shader" />
     <None Include="Assets\VolumetricLines\Shaders\Strip-Additive.shader" />
-    <None Include="Assets\Scripts\SpellList.txt" />
+    <None Include="Assets\Scripts\AbilityScripts\SpellList.txt" />
     <None Include="Assets\VolumetricLines\Shaders\Fast-AlphaBlended.shader" />
     <None Include="Assets\VolumetricLines\Shaders\Strip-AlphaBlended.shader" />
     <None Include="Assets\VolumetricLines\Shaders\Fast-Additive.shader" />
