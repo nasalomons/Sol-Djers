@@ -116,7 +116,9 @@ public sealed class EventManager : MonoBehaviour {
             ActionEvent actionEvent;
             eventMap.TryGetValue(action.getOwner(), out actionEvent);
 
-            actionEvent.Invoke(action);
+            if (actionEvent != null) {
+                actionEvent.Invoke(action);
+            }
         }
     }
 }

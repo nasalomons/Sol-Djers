@@ -263,8 +263,8 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
             } else {
                 // dead
                 isDead = true;
-                eventManager.Unsubscribe(this);
-                attackManager.Unsubscribe(this);
+                //eventManager.Unsubscribe(this);
+                //attackManager.Unsubscribe(this);
             }
         }
     }
