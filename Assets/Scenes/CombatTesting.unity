@@ -1409,6 +1409,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 31260940}
+  cursorAbility: {fileID: 2800000, guid: 009bc0f57c177604a90b4697026d8c00, type: 3}
 --- !u!195 &1768300677
 NavMeshAgent:
   m_ObjectHideFlags: 0
