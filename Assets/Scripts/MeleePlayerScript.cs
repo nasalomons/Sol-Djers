@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using static EventManager;
 using static AttackManager;
 
-public class MeleePlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameObject {
+public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, AttackableGameObject {
 
     private readonly float ATTACK_RANGE = 2.5f;    
 
@@ -22,7 +22,6 @@ public class MeleePlayerScript : MonoBehaviour, ActionableGameObject, Attackable
 
     private bool lastPauseStatus;
     private Renderer rend;
-    private bool selected;
 
     private Action currentAction;
     private long lastAttackTime;
@@ -93,11 +92,11 @@ public class MeleePlayerScript : MonoBehaviour, ActionableGameObject, Attackable
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100)) {
                 if (clickPosition.transform.gameObject == gameObject) {
                     Debug.Log("Hit the Player!");
-                    selected = true;
+                    this.SetSelected(true);
                     rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
                     mainCamera.setPlayer(this.gameObject);
                 } else {
-                    selected = false;
+                    this.SetSelected(false);
                     rend.material.shader = Shader.Find("Diffuse");
                     if (targetIndicator != null) {
                         GameObject.Destroy(targetIndicator);
@@ -106,15 +105,16 @@ public class MeleePlayerScript : MonoBehaviour, ActionableGameObject, Attackable
                     }
                 }
             }
-        } else if (Input.GetMouseButton(1) && selected) {
+        } else if (Input.GetMouseButton(1) && this.GetSelected()) {
             bool click = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100);
+            RaycastHit[] hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
 
             if (click) {
                 Action action;
                 if (clickPosition.transform.gameObject.tag == "Enemy") {
                     action = new Action("autoattack", this, clickPosition);                    
                 } else {
-                    action = new Action("move", this, clickPosition);                
+                    action = new Action("move", this, hits[hits.Length - 1]);                
                 }
 
                 eventManager.QueueAction(action);
@@ -123,11 +123,11 @@ public class MeleePlayerScript : MonoBehaviour, ActionableGameObject, Attackable
                 }
             } 
         } else if (Input.GetKeyUp(KeyCode.Alpha1)) {
-            selected = true;
+            this.SetSelected(true);
             rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
             mainCamera.setPlayer(this.gameObject);
         } else if (Input.GetKeyUp(KeyCode.Alpha2)) {
-            selected = false;
+            this.SetSelected(true);
             rend.material.shader = Shader.Find("Diffuse");
             if (targetIndicator != null) {
                 GameObject.Destroy(targetIndicator);
@@ -136,7 +136,7 @@ public class MeleePlayerScript : MonoBehaviour, ActionableGameObject, Attackable
             }
         }
 
-        if (selected) {
+        if (this.GetSelected()) {
             showAction();
         }        
     }

@@ -5,12 +5,13 @@ using UnityEngine.AI;
 using static EventManager;
 using static AttackManager;
 
-public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, AttackableGameObject {
+public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, AttackableGameObject {
 
     private readonly float ATTACK_RANGE = 6f;
 
     private NavMeshAgent agent;
-    private CameraScript mainCamera;
+    private CameraScript mainCameraScript;
+    private Camera mainCamera;
 
     private GameObject targetIndicatorPrefab;
     private GameObject targetIndicator;
@@ -23,7 +24,6 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
 
     private bool lastPauseStatus;
     private Renderer rend;
-    private bool selected;
 
     private Action currentAction;
     private long lastAttackTime;
@@ -34,10 +34,19 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
 
     public LineRenderer lineRenderer;
 
+    public Texture2D cursorAbility;
+    private bool abilityReady;
+
+    private Vector2 boxStartPosition;
+    private Vector2 boxEndPosition;
+    public Texture selectTexture;
+    private SelectableCharacter[] selectableChars;
+
     // Start is called before the first frame update
     void Start() {
         agent = GetComponent<NavMeshAgent>();
-        mainCamera = Camera.main.GetComponent<CameraScript>();
+        mainCameraScript = Camera.main.GetComponent<CameraScript>();
+        mainCamera = Camera.main;
 
         targetIndicatorPrefab = Resources.Load("TargetPoint") as GameObject;
         targetIndicator = null;
@@ -57,6 +66,7 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
         overhead = gameObject.GetComponent<HealthScript>();
 
         abilityList = GetComponents<Ability>();
+        abilityReady = false;
     }
 
     void OnDisable() {
@@ -95,15 +105,61 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
             }
         }
 
+        // Called while the user is holding the mouse down.
+        if (Input.GetMouseButton(0))
+        {
+            // Called on the first update where the user has pressed the mouse button.
+            if (Input.GetMouseButtonDown(0))
+                boxStartPosition = Input.mousePosition;
+            else  // Else we must be in "drag" mode.
+                boxEndPosition = Input.mousePosition;
+        }
+        else
+        {
+            // Handle the case where the player had been drawing a box but has now released.
+            if (boxEndPosition != Vector2.zero && boxStartPosition != Vector2.zero)
+                HandleUnitSelection(boxStartPosition, boxEndPosition);
+            // Reset box positions.
+            boxEndPosition = boxStartPosition = Vector2.zero;
+        }
+
         if (Input.GetMouseButtonDown(0)) {
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100)) {
+            if (abilityReady && this.GetSelected())
+            {
+                bool click = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100);
+
+                if (click) {
+                    Action action = null;
+                    if (clickPosition.transform.gameObject.tag == "Enemy") {
+                        if (abilityList[0].IsCastable())
+                        {
+                            action = new Action("ability0", this, clickPosition);
+                            abilityReady = false;
+                            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                        } else
+                        {
+                            abilityReady = false;
+                            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                        }
+                    } else {
+                        abilityReady = false;
+                        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                    }
+
+                    eventManager.QueueAction(action);
+
+                    if (pauseManager.IsPaused()) {
+                        currentAction = action;
+                    }
+                }
+            } else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100)) {
                 if (clickPosition.transform.gameObject == gameObject) {
                     Debug.Log("Hit the Player!");
-                    selected = true;
+                    this.SetSelected(true);
                     rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
-                    mainCamera.setPlayer(this.gameObject);
+                    mainCameraScript.setPlayer(this.gameObject);
                 } else {
-                    selected = false;
+                    this.SetSelected(false);
                     rend.material.shader = Shader.Find("Diffuse");
                     if (targetIndicator != null) {
                         GameObject.Destroy(targetIndicator);
@@ -112,18 +168,17 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
                     }
                 }
             }
-        } else if (Input.GetMouseButton(1) && selected) {
+        } else if (Input.GetMouseButton(1) && this.GetSelected()) {
             bool click = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100);
+            RaycastHit[] hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
 
             if (click) {
                 Action action = null;
                 if (clickPosition.transform.gameObject.tag == "Enemy") {
                     action = new Action("autoattack", this, clickPosition);
-                    //if (abilityList[0].IsCastable()) {
-                    //    action = new Action("ability0", this, clickPosition);
-                    //}
                 } else {
-                    action = new Action("move", this, clickPosition);
+                    
+                    action = new Action("move", this, hits[hits.Length - 1]);
                 }
 
                 eventManager.QueueAction(action);
@@ -132,13 +187,17 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
                     currentAction = action;
                 }
             }
-
-        } else if (Input.GetKeyUp(KeyCode.Alpha2)) {
-            selected = true;
+        }
+        else if (Input.GetKeyDown(KeyCode.Q)) {
+            Cursor.SetCursor(cursorAbility, Vector2.zero, CursorMode.Auto);
+            abilityReady = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.Alpha2)) {
+            this.SetSelected(true);
             rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
-            mainCamera.setPlayer(this.gameObject);
+            mainCameraScript.setPlayer(this.gameObject);
         } else if (Input.GetKeyUp(KeyCode.Alpha1)) {
-            selected = false;
+            this.SetSelected(false);
             rend.material.shader = Shader.Find("Diffuse");
             if (targetIndicator != null) {
                 GameObject.Destroy(targetIndicator);
@@ -147,14 +206,14 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
             }
         }
 
-        if (selected) {
+        if (this.GetSelected()) {
             showAction();
         }
     }
 
     private void showAction() {
         if (currentAction == null) {
-            overhead.updateAction(HealthScript.CurrentAction.NONE);
+            // overhead.updateAction(HealthScript.CurrentAction.NONE);
         } else {
             if (currentAction.getName().Equals("move")) {
                 Vector3 placement = new Vector3(currentAction.getDestination().point.x, 0.5f, currentAction.getDestination().point.z);
@@ -168,14 +227,14 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
                 lineRenderer.positionCount = path.corners.Length;
                 lineRenderer.SetPositions(path.corners);
 
-                overhead.updateAction(HealthScript.CurrentAction.MOVE);
+                //overhead.updateAction(HealthScript.CurrentAction.MOVE);
             } else if (currentAction.getName().Equals("autoattack")) {
                 if (targetIndicator != null) {
                     GameObject.Destroy(targetIndicator);
                     targetIndicator = null;
                     lineRenderer.positionCount = 0;
                 }
-                overhead.updateAction(HealthScript.CurrentAction.ATTACK);
+                //overhead.updateAction(HealthScript.CurrentAction.ATTACK);
             } 
         }
     }
@@ -253,6 +312,44 @@ public class RangedPlayerScript : MonoBehaviour, ActionableGameObject, Attackabl
             } else {
                 // dead
             }
+        }
+    }
+
+    public void HandleUnitSelection(Vector2 boxStartPosition, Vector2 boxEndPosition)
+    {
+        selectableChars = FindObjectsOfType<SelectableCharacter>();
+        var rect = new Rect(boxStartPosition.x, Screen.height - boxStartPosition.y,
+                                boxEndPosition.x - boxStartPosition.x,
+                                -1 * (boxEndPosition.y - boxStartPosition.y));
+
+        foreach (SelectableCharacter selChar in selectableChars)
+        {
+            if (rect.Contains(mainCamera.WorldToScreenPoint(selChar.gameObject.transform.position)))
+            {
+                selChar.SetSelected(true);
+            }
+        }
+    }
+
+    public void OnGUI()
+    {
+        
+        // If we are in the middle of a selection draw the texture.
+        if (boxStartPosition != Vector2.zero && boxEndPosition != Vector2.zero)
+        {
+
+            GUI.color = new Color(1.0f, 1.0f, 1.0f, 0.5f); //0.5 is half opacity
+
+            // Create a rectangle object out of the start and end position while transforming it
+            // to the screen's cordinates.
+            var rect = new Rect(boxStartPosition.x, Screen.height - boxStartPosition.y,
+                                boxEndPosition.x - boxStartPosition.x,
+                                -1 * (boxEndPosition.y - boxStartPosition.y));
+            // Draw the texture.
+            GUI.DrawTexture(rect, selectTexture);
+        } else
+        {
+            GUI.color = Color.white;
         }
     }
 }

@@ -268,6 +268,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8f6736d42141fa4c8e66d4a21ed1cb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pausedText: {fileID: 0}
 --- !u!114 &110810733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -970,6 +971,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 31260940}
+  cursorAbility: {fileID: 2800000, guid: 009bc0f57c177604a90b4697026d8c00, type: 3}
 --- !u!195 &1768300677
 NavMeshAgent:
   m_ObjectHideFlags: 0
