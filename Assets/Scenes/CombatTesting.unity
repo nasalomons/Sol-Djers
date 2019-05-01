@@ -617,7 +617,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacbc7e887d0fbc44ada179ed6ba0fb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 150
 --- !u!1 &543115170
 GameObject:
   m_ObjectHideFlags: 0
@@ -743,7 +743,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 543115170}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.91, y: 1, z: -3.2}
+  m_LocalPosition: {x: 0.6, y: 1, z: -3.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1376,6 +1376,7 @@ GameObject:
   - component: {fileID: 1768300677}
   - component: {fileID: 1768300676}
   - component: {fileID: 1768300675}
+  - component: {fileID: 1768300682}
   m_Layer: 0
   m_Name: RangedCharacter
   m_TagString: Ally
@@ -1410,6 +1411,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 31260940}
   cursorAbility: {fileID: 2800000, guid: 009bc0f57c177604a90b4697026d8c00, type: 3}
+  selectTexture: {fileID: 2800000, guid: 310c08e56225fa44aa52df86d3247752, type: 3}
 --- !u!195 &1768300677
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1504,6 +1506,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1768300682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1768300674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9c45ba866d04b47854256c3f6785a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 5
 --- !u!1 &2052241185
 GameObject:
   m_ObjectHideFlags: 0
@@ -1629,7 +1644,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2052241185}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.91, y: 1, z: 2.99}
+  m_LocalPosition: {x: 2.68, y: 1, z: 2.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

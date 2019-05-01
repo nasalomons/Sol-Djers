@@ -128,8 +128,8 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
             this.SetSelected(true);
             rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
             mainCamera.setPlayer(this.gameObject);
-        } else if (Input.GetKeyUp(KeyCode.Alpha2)) {
-            this.SetSelected(true);
+        } else if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            this.SetSelected(false);
             rend.material.shader = Shader.Find("Diffuse");
             if (targetIndicator != null) {
                 GameObject.Destroy(targetIndicator);
@@ -149,7 +149,7 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
 
     private void showAction() {
         if (currentAction == null) {
-            overhead.updateAction(HealthScript.CurrentAction.NONE);
+            overhead.UpdateAction(HealthScript.CurrentAction.NONE);
         } else {
             if (currentAction.getName().Equals("move")) {
                 Vector3 placement = new Vector3(currentAction.getDestination().point.x, 0.5f, currentAction.getDestination().point.z);
@@ -163,14 +163,14 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
                 lineRenderer.positionCount = path.corners.Length;
                 lineRenderer.SetPositions(path.corners);
 
-                overhead.updateAction(HealthScript.CurrentAction.MOVE);
+                overhead.UpdateAction(HealthScript.CurrentAction.MOVE);
             } else if (currentAction.getName().Equals("autoattack")) {
                 if (targetIndicator != null) {
                     GameObject.Destroy(targetIndicator);
                     targetIndicator = null;
                     lineRenderer.positionCount = 0;
                 }
-                overhead.updateAction(HealthScript.CurrentAction.ATTACK);
+                overhead.UpdateAction(HealthScript.CurrentAction.ATTACK);
             }
         }
     }
@@ -245,9 +245,7 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
                 }
             } else {
                 // dead
-                isDead = true;
-                eventManager.Unsubscribe(this);
-                attackManager.Unsubscribe(this);
+                isDead = true;             
             }
         }
     }

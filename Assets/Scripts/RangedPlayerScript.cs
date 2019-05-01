@@ -198,7 +198,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
             this.SetSelected(true);
             rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
             mainCameraScript.setPlayer(this.gameObject);
-        } else if (Input.GetKeyUp(KeyCode.Alpha1)) {
+        } else if (Input.GetKeyDown(KeyCode.Alpha1)) {
             this.SetSelected(false);
             rend.material.shader = Shader.Find("Diffuse");
             if (targetIndicator != null) {
@@ -323,8 +323,6 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
             } else {
                 // dead
                 isDead = true;
-                eventManager.Unsubscribe(this);
-                attackManager.Unsubscribe(this);
             }
         }
     }

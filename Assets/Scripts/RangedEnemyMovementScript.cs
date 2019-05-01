@@ -68,6 +68,7 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                     } else {
                         agent.destination = agent.transform.position;
                         if (timeManager.getTimeSeconds() - lastAttackTime > RANGED_ATTACK_CD) {
+                            transform.LookAt(currentTarget.transform);
                             Attack attack = new Attack("autoattack", gameObject, currentTarget, 10);
                             GameObject autoAttack = Instantiate(autoAttackPrefab, transform.position + transform.forward * 1.5f, transform.rotation);
                             autoAttack.GetComponent<RangedAutoAttackProjectile>().setAttack(attack);
@@ -101,7 +102,8 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
             } else {
                 // dead
                 attackManager.Unsubscribe(this);
-                //Destroy(gameObject);
+                Destroy(gameObject);
+                Destroy(this);
             }
         }
     }

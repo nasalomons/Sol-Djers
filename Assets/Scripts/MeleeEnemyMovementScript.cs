@@ -98,7 +98,8 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
             } else {
                 // dead
                 attackManager.Unsubscribe(this);
-                //Destroy(gameObject);
+                Destroy(gameObject);
+                Destroy(this);
             }
         }
     }

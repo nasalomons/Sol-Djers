@@ -30,19 +30,25 @@ public class HealthScript : MonoBehaviour {
         if (currentHealth == maxHealth && !gameObject.tag.Equals("Ally")) {
             overhead.SetActive(false);
         } else {
-            overhead.SetActive(true);
-            overhead.transform.GetChild(0).GetChild(2).gameObject.transform.localScale = new Vector3(currentHealth/maxHealth, 0.15f, 1);
+            overhead.SetActive(true);            
         }
 
+        if (currentHealth <= 0) {
+            Destroy(overhead);
+        }
     }
 
     // Object takes damage. Returns false if the health is 0 and true otherwise.
     public bool TakeDamage(float amount) {
         currentHealth = Mathf.Max(0, currentHealth - amount);
+        overhead.transform.GetChild(0).GetChild(2).gameObject.transform.localScale = new Vector3(currentHealth/maxHealth, 0.15f, 1);
+        if (currentHealth == 0) {
+            Destroy(overhead);
+        }
         return currentHealth != 0;
     }
 
-    public void updateAction(CurrentAction action) {
+    public void UpdateAction(CurrentAction action) {
         Image status = overhead.transform.GetChild(1).GetChild(2).GetComponent<Image>();
         switch (action) {
             case CurrentAction.NONE:
