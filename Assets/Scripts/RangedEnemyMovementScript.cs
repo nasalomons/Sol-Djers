@@ -101,7 +101,7 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
             } else {
                 // dead
                 attackManager.Unsubscribe(this);
-                Destroy(gameObject);
+                //Destroy(gameObject);
             }
         }
     }

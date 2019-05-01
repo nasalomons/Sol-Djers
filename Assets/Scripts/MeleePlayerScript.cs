@@ -193,11 +193,12 @@ public class MeleePlayerScript : MonoBehaviour, ActionableGameObject, Attackable
     }
 
     private void DoAttackAction(Action action) {
-        GameObject target = action.getDestination().transform.gameObject;
-        if (target == null) {
+        Transform temp = action.getDestination().transform;       
+        if (temp == null) {
             return;
         }
-        
+        GameObject target = temp.gameObject;
+
         // if within attack range attack
         if ((transform.position - target.transform.position).magnitude <= ATTACK_RANGE) {
             currentAction = action;
