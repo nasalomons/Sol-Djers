@@ -19,6 +19,7 @@ public class SplittingRayAbility : Ability {
     
     public override void CastAbility(GameObject owner, GameObject target) {
         Attack attack = new Attack("ability", owner, target, damage, this);
+        owner.transform.LookAt(target.transform);
         GameObject rayProjectile = Instantiate(
             projectilePrefab,
             transform.position + transform.forward * 1.5f,

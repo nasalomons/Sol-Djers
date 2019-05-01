@@ -43,6 +43,8 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
     public Texture selectTexture;
     private SelectableCharacter[] selectableChars;
 
+    private Animator animator;
+
     // Start is called before the first frame update
     void Start() {
         agent = GetComponent<NavMeshAgent>();
@@ -61,7 +63,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
         attackManager.Subscribe(this);
 
         lastPauseStatus = false;
-        rend = transform.gameObject.GetComponent<Renderer>();
+        rend = transform.gameObject.GetComponentInChildren<Renderer>();
         lastAttackTime = 0;
 
         overhead = gameObject.GetComponent<HealthScript>();
@@ -69,6 +71,8 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
 
         abilityList = GetComponents<Ability>();
         abilityReady = false;
+
+        animator = gameObject.GetComponentInParent<Animator>();
     }
 
     void OnDisable() {
@@ -82,6 +86,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
             if (!lastPauseStatus) {
                 lastPauseStatus = true;
                 agent.isStopped = true;
+                animator.enabled = false;
             }
 
         } else {
@@ -89,6 +94,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
             if (lastPauseStatus) {
                 lastPauseStatus = false;
                 agent.isStopped = false;
+                animator.enabled = true;
             }
 
             // Player is currently moving
@@ -100,6 +106,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
                     lineRenderer.positionCount = 0;
                     currentAction = null;
                     showAction();
+                    animator.SetBool("IsMoving", false);
                 } else {
                     lineRenderer.positionCount = agent.path.corners.Length;
                     lineRenderer.SetPositions(agent.path.corners);
@@ -219,7 +226,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
 
     private void showAction() {
         if (currentAction == null) {
-            // overhead.updateAction(HealthScript.CurrentAction.NONE);
+            overhead.UpdateAction(HealthScript.CurrentAction.NONE);
         } else {
             if (currentAction.getName().Equals("move")) {
                 Vector3 placement = new Vector3(currentAction.getDestination().point.x, 0.5f, currentAction.getDestination().point.z);
@@ -233,19 +240,20 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
                 lineRenderer.positionCount = path.corners.Length;
                 lineRenderer.SetPositions(path.corners);
 
-                //overhead.updateAction(HealthScript.CurrentAction.MOVE);
+                overhead.UpdateAction(HealthScript.CurrentAction.MOVE);
             } else if (currentAction.getName().Equals("autoattack")) {
                 if (targetIndicator != null) {
                     GameObject.Destroy(targetIndicator);
                     targetIndicator = null;
                     lineRenderer.positionCount = 0;
                 }
-                //overhead.updateAction(HealthScript.CurrentAction.ATTACK);
+                overhead.UpdateAction(HealthScript.CurrentAction.ATTACK);
             } 
         }
     }
 
     private void DoMovementAction(Action action, Action nextAction) {
+        animator.SetBool("IsMoving", true);
         currentAction = action;
         agent.destination = action.getDestination().point;
         Vector3 placement = new Vector3(action.getDestination().point.x, 0.5f, action.getDestination().point.z);
@@ -281,12 +289,15 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
             long currentTime = timeManager.getTimeSeconds();
             if (currentTime - lastAttackTime >= 2) {
                 Debug.Log("attack at time " + currentTime);
-
+              
                 Attack attack = new Attack("auto", gameObject, target, 10);
                 GameObject autoAttack = Instantiate(autoAttackPrefab, transform.position + transform.forward * 1.5f, transform.rotation);
                 autoAttack.GetComponent<RangedAutoAttackProjectile>().setAttack(attack);
 
                 lastAttackTime = currentTime;
+
+                animator.SetBool("IsMoving", false);
+                animator.SetTrigger("IsAttacking");
             }
 
             // queue up next attack
@@ -299,7 +310,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
         }
     }
 
-    public void OnActionEvent(EventManager.Action action) {
+    public void OnActionEvent(Action action) {
         if (action.getName().Equals("move")) {
             DoMovementAction(action, action.getNextAction());
         } else if (action.getName().Equals("autoattack")) {
@@ -307,6 +318,8 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
         } else if (action.getName().Equals("ability0")) {
             GameObject target = action.getDestination().transform.gameObject;
             if (target != null) {
+                animator.SetBool("IsMoving", false);
+                animator.SetTrigger("IsCastingAbility");
                 abilityList[0].CastAbility(gameObject, target);
             }            
         }

@@ -21,12 +21,12 @@ public class HealthScript : MonoBehaviour {
         overheadPrefab = Resources.Load("Overhead") as GameObject;
         moveSprite = Resources.Load<Sprite>("MoveSprite") as Sprite;
         attackSprite = Resources.Load<Sprite>("AttackSprite") as Sprite;
-        overhead = Instantiate(overheadPrefab, gameObject.transform.position + new Vector3(0, 4.35f, 0), Quaternion.identity);
+        overhead = Instantiate(overheadPrefab, gameObject.transform.position + new Vector3(0, 5.5f, 0), Quaternion.identity);
         overhead.transform.rotation = Camera.main.transform.rotation;
     }
 
     void Update() {
-        overhead.transform.position = gameObject.transform.position + new Vector3(0, 4f, 0);
+        overhead.transform.position = gameObject.transform.position + new Vector3(0, 5.5f, 0);
         if (currentHealth == maxHealth && !gameObject.tag.Equals("Ally")) {
             overhead.SetActive(false);
         } else {
