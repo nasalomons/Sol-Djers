@@ -40,7 +40,7 @@ public class HealthScript : MonoBehaviour {
 
     // Object takes damage. Returns false if the health is 0 and true otherwise.
     public bool TakeDamage(float amount) {
-        currentHealth = Mathf.Max(0, currentHealth - amount);
+        currentHealth = Mathf.Min(Mathf.Max(0, currentHealth - amount), maxHealth);
         overhead.transform.GetChild(0).GetChild(2).gameObject.transform.localScale = new Vector3(currentHealth/maxHealth, 0.15f, 1);
         if (currentHealth == 0) {
             Destroy(overhead);

@@ -36,7 +36,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
     public LineRenderer lineRenderer;
 
     public Texture2D cursorAbility;
-    private bool abilityReady;
+    private int abilityToCast;
 
     private Vector2 boxStartPosition;
     private Vector2 boxEndPosition;
@@ -70,7 +70,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
         isDead = false;
 
         abilityList = GetComponents<Ability>();
-        abilityReady = false;
+        abilityToCast = -1;
 
         animator = gameObject.GetComponentInParent<Animator>();
     }
@@ -114,44 +114,50 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
             }
         }
 
-        // Called while the user is holding the mouse down.
-        if (Input.GetMouseButton(0))
-        {
-            // Called on the first update where the user has pressed the mouse button.
-            if (Input.GetMouseButtonDown(0))
-                boxStartPosition = Input.mousePosition;
-            else  // Else we must be in "drag" mode.
-                boxEndPosition = Input.mousePosition;
-        }
-        else
-        {
-            // Handle the case where the player had been drawing a box but has now released.
-            if (boxEndPosition != Vector2.zero && boxStartPosition != Vector2.zero)
-                HandleUnitSelection(boxStartPosition, boxEndPosition);
-            // Reset box positions.
-            boxEndPosition = boxStartPosition = Vector2.zero;
+        // Called while the user is holding the mouse down and we aren't trying to cast an ability.
+        if (abilityToCast == -1) {
+            if (Input.GetMouseButton(0)) {
+                // Called on the first update where the user has pressed the mouse button.
+                if (Input.GetMouseButtonDown(0))
+                    boxStartPosition = Input.mousePosition;
+                else  // Else we must be in "drag" mode.
+                    boxEndPosition = Input.mousePosition;
+            } else {
+                // Handle the case where the player had been drawing a box but has now released.
+                if (boxEndPosition != Vector2.zero && boxStartPosition != Vector2.zero)
+                    HandleUnitSelection(boxStartPosition, boxEndPosition);
+                // Reset box positions.
+                boxEndPosition = boxStartPosition = Vector2.zero;
+            }
         }
 
-        if (Input.GetMouseButtonDown(0)) {
-            if (abilityReady && this.GetSelected())
+        if (Input.GetMouseButtonUp(0)) {
+            if (abilityToCast >= 0 && this.GetSelected())
             {
                 bool click = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100);
 
                 if (click) {
                     Action action = null;
                     if (clickPosition.transform.gameObject.tag == "Enemy") {
-                        if (abilityList[0].IsCastable())
-                        {
-                            action = new Action("ability0", this, clickPosition);
-                            abilityReady = false;
+                        if (abilityList[abilityToCast].IsCastable()) {
+                            action = new Action("ability" + abilityToCast, this, clickPosition);
+                            abilityToCast = -1;
                             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                        } else
-                        {
-                            abilityReady = false;
+                        } else {
+                            abilityToCast = -1;
+                            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                        }
+                    } else if (abilityToCast == 1 && clickPosition.transform.gameObject.tag == "Ally") {
+                        if (abilityList[1].IsCastable()) {
+                            action = new Action("ability" + abilityToCast, this, clickPosition);
+                            abilityToCast = -1;
+                            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                        } else {
+                            abilityToCast = -1;
                             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                         }
                     } else {
-                        abilityReady = false;
+                        abilityToCast = -1;
                         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                     }
 
@@ -199,9 +205,11 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
         }
         else if (Input.GetKeyDown(KeyCode.Q)) {
             Cursor.SetCursor(cursorAbility, Vector2.zero, CursorMode.Auto);
-            abilityReady = true;
-        }
-        else if (Input.GetKeyUp(KeyCode.Alpha2)) {
+            abilityToCast = 0;
+        } else if (Input.GetKeyDown(KeyCode.W)) {
+            Cursor.SetCursor(cursorAbility, Vector2.zero, CursorMode.Auto);
+            abilityToCast = 1;
+        } else if (Input.GetKeyUp(KeyCode.Alpha2)) {
             this.SetSelected(true);
             rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
             mainCameraScript.setPlayer(this.gameObject);
@@ -322,6 +330,13 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
                 animator.SetTrigger("IsCastingAbility");
                 abilityList[0].CastAbility(gameObject, target);
             }            
+        } else if (action.getName().Equals("ability1")) {
+            GameObject target = action.getDestination().transform.gameObject;
+            if (target != null) {
+                animator.SetBool("IsMoving", false);
+                animator.SetTrigger("IsCastingAbility");
+                abilityList[1].CastAbility(gameObject, target);
+            }
         }
         showAction();
     }
