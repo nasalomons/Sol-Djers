@@ -3,15 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TutorialScript : MonoBehaviour {
-    private bool isTriggered;
+    private Transform conversationText;
     private Transform tutorialText;
+
+    private bool isTriggered;
+    private bool readConversation;
     private int pageCount;
     private int currentPage;
 
+    public GameObject conversation;
     public GameObject tutorial;
 
     void Start() {
         isTriggered = false;
+        readConversation = false;
+        if (conversation != null) {
+            conversationText = conversation.transform.GetChild(2);
+        }
         tutorialText = tutorial.transform.GetChild(1);
         pageCount = tutorialText.childCount;
         currentPage = 1;
@@ -20,20 +28,31 @@ public class TutorialScript : MonoBehaviour {
     void Update() {
         if (Input.GetKeyDown(KeyCode.Return)) {
             if (isTriggered) {
-                if (++currentPage < pageCount) {
-                    tutorialText.GetChild(currentPage - 1).gameObject.SetActive(false);
-                    tutorialText.GetChild(currentPage).gameObject.SetActive(true);
+                if (!readConversation) {
+                    conversation.SetActive(false);
+                    tutorial.SetActive(true);
+                    readConversation = true;
                 } else {
-                    Destroy(tutorial);
-                    Destroy(this);
-                }   
+                    if (++currentPage < pageCount) {
+                        tutorialText.GetChild(currentPage - 1).gameObject.SetActive(false);
+                        tutorialText.GetChild(currentPage).gameObject.SetActive(true);
+                    } else {
+                        Destroy(tutorial);
+                        Destroy(this);
+                    }
+                }
             }
         }
     }
 
     private void OnTriggerStay(Collider other) {
         if (!isTriggered) {
-            tutorial.SetActive(true);
+            if (conversation != null) {
+                conversation.SetActive(true);
+            } else {
+                readConversation = true;
+                tutorial.SetActive(true);
+            }
             isTriggered = true;
         }
     }
