@@ -7,7 +7,7 @@ public abstract class Ability : MonoBehaviour {
     public int cooldown;
 
     private TimeManager timeManager;
-    private AttackManager attackManager;
+    protected AttackManager attackManager;
 
     private float lastAttackTime;
 

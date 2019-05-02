@@ -4,11 +4,8 @@ using UnityEngine;
 using static AttackManager;
 
 public class Heal : Ability {
-    AttackManager attackManager;
-
     new void Start() {
         base.Start();
-        attackManager = AttackManager.Instance;
     }
 
     public override void CastAbility(GameObject owner, GameObject target) {
