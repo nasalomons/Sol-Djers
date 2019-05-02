@@ -61,6 +61,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Fonts\Script\scriptTexttest.cs" />
+    <Compile Include="Assets\Particle Ribbon by Moonflower Carnivore\Scripts\randomParticleRotation.cs" />
+    <Compile Include="Assets\Particle Ribbon by Moonflower Carnivore\Scripts\ReverseNormals.cs" />
+    <Compile Include="Assets\Particle Ribbon by Moonflower Carnivore\Scripts\rotation.cs" />
     <Compile Include="Assets\Scripts\AbilityScripts\Ability.cs" />
     <Compile Include="Assets\Scripts\AbilityScripts\Heal.cs" />
     <Compile Include="Assets\Scripts\AbilityScripts\SplittingRayAbility.cs" />
@@ -69,6 +72,7 @@
     <Compile Include="Assets\Scripts\CameraScript.cs" />
     <Compile Include="Assets\Scripts\DoorScript.cs" />
     <Compile Include="Assets\Scripts\DummyScript.cs" />
+    <Compile Include="Assets\Scripts\FollowScript.cs" />
     <Compile Include="Assets\Scripts\HealthScript.cs" />
     <Compile Include="Assets\Scripts\Managers\AttackManager.cs" />
     <Compile Include="Assets\Scripts\Managers\EventManager.cs" />
@@ -95,6 +99,7 @@
     <Compile Include="Assets\VolumetricLines\Scripts\VolumetricMultiLineBehavior.cs" />
     <None Include="Assets\VolumetricLines\Shaders\_StripShader.cginc" />
     <None Include="Assets\Sci-Fi Styled Modular Pack\Readme.txt" />
+    <None Include="Assets\Particle Ribbon by Moonflower Carnivore\Shaders\Particle Alpha Blend HDR.shader" />
     <None Include="Assets\Scripts\Managers\CombatFlow.txt" />
     <None Include="Assets\Fonts\Documentation\JazzCreateBubble_VersionHistory_1.1.txt" />
     <None Include="Assets\VolumetricLines\Shaders\Additive.shader" />
@@ -104,6 +109,7 @@
     <None Include="Assets\VolumetricLines\Shaders\Fast-AlphaBlended.shader" />
     <None Include="Assets\VolumetricLines\Shaders\Strip-AlphaBlended.shader" />
     <None Include="Assets\VolumetricLines\Shaders\Fast-Additive.shader" />
+    <None Include="Assets\Particle Ribbon by Moonflower Carnivore\readme_Simple_Particle_Ribbon.txt" />
     <None Include="Assets\Fonts\Documentation\JazzCreateAltKeys_BubbleFont.txt" />
     <None Include="Assets\VolumetricLines\Shaders\_SimpleShader.cginc" />
     <Reference Include="Unity.TextMeshPro.Editor">

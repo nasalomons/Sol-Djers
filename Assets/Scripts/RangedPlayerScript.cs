@@ -191,8 +191,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
                 Action action = null;
                 if (clickPosition.transform.gameObject.tag == "Enemy") {
                     action = new Action("autoattack", this, clickPosition);
-                } else {
-                    
+                } else {                   
                     action = new Action("move", this, hits[hits.Length - 1]);
                 }
 

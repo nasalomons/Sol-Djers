@@ -6327,6 +6327,17 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 644062122559197760, guid: 7787d300a80fb244fa25c6e6e9fd26ec,
+        type: 3}
+      propertyPath: ray
+      value: 
+      objectReference: {fileID: 3314058356350981455, guid: cdb876e2af6df504caf263f5a8cd69bc,
+        type: 3}
+    - target: {fileID: 644062122559197760, guid: 7787d300a80fb244fa25c6e6e9fd26ec,
+        type: 3}
+      propertyPath: temp
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7787d300a80fb244fa25c6e6e9fd26ec, type: 3}
 --- !u!1001 &1845920500
