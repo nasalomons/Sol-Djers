@@ -12,7 +12,7 @@ public class TutorialScript : MonoBehaviour {
 
     void Start() {
         isTriggered = false;
-        tutorialText = tutorial.transform.GetChild(2);
+        tutorialText = tutorial.transform.GetChild(1);
         pageCount = tutorialText.childCount;
         currentPage = 1;
     }
