@@ -10,7 +10,7 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
     private readonly float ATTACK_RANGE = 2.5f;    
 
     private NavMeshAgent agent;
-    private CameraScript mainCamera;
+    private CameraScript mainCameraScript;
 
     private GameObject targetIndicatorPrefab;
     private GameObject targetIndicator;
@@ -31,10 +31,12 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
 
     public LineRenderer lineRenderer;
 
+    private Animator animator;
+
     // Start is called before the first frame update
     void Start() {
         agent = GetComponent<NavMeshAgent>();
-        mainCamera = Camera.main.GetComponent<CameraScript>();
+        mainCameraScript = Camera.main.GetComponent<CameraScript>();
 
         targetIndicatorPrefab = Resources.Load("TargetPoint") as GameObject;
         targetIndicator = null;
@@ -47,11 +49,13 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
         attackManager.Subscribe(this);
 
         lastPauseStatus = false;
-        rend = transform.gameObject.GetComponent<Renderer>();
+        rend = transform.gameObject.GetComponentInChildren<Renderer>();
         lastAttackTime = 0;
 
         overhead = gameObject.GetComponent<HealthScript>();
         isDead = false;
+
+        animator = GetComponent<Animator>();
     }
 
     void OnDisable() {
@@ -65,6 +69,7 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
             if (!lastPauseStatus) {
                 lastPauseStatus = true;
                 agent.isStopped = true;
+                animator.enabled = false;
             }
         
         } else {
@@ -72,6 +77,7 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
             if (lastPauseStatus) {
                 lastPauseStatus = false;
                 agent.isStopped = false;
+                animator.enabled = true;
             }
 
             // Player is currently moving
@@ -88,6 +94,14 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
                     lineRenderer.SetPositions(agent.path.corners);
                 }
             }
+
+            if (agent.transform.position.x == agent.destination.x && agent.transform.position.z == agent.destination.z) {
+                animator.SetBool("IsMoving", false);
+            }
+        }
+
+        if (GetSelected()) {
+            mainCameraScript.setPlayer(gameObject);
         }
 
         if (Input.GetMouseButtonDown(0)) {
@@ -96,7 +110,6 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
                     Debug.Log("Hit the Player!");
                     this.SetSelected(true);
                     rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
-                    mainCamera.setPlayer(this.gameObject);
                 } else {
                     this.SetSelected(false);
                     rend.material.shader = Shader.Find("Diffuse");
@@ -127,7 +140,6 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
         } else if (Input.GetKeyUp(KeyCode.Alpha1)) {
             this.SetSelected(true);
             rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
-            mainCamera.setPlayer(this.gameObject);
         } else if (Input.GetKeyDown(KeyCode.Alpha2)) {
             this.SetSelected(false);
             rend.material.shader = Shader.Find("Diffuse");
@@ -138,9 +150,7 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
             }
         }
 
-        if (this.GetSelected()) {
-            showAction();
-        }        
+        showAction();
     }
 
     public bool IsDead() {
@@ -176,6 +186,7 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
     }
 
     private void DoMovementAction(Action action, Action nextAction) {
+        animator.SetBool("IsMoving", true);
         currentAction = action;
         agent.destination = action.getDestination().point;
         Vector3 placement = new Vector3(action.getDestination().point.x, 0.5f, action.getDestination().point.z);
@@ -212,12 +223,13 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
             // if we havent attacked in 2 seconds
             long currentTime = timeManager.getTimeSeconds();
             if (currentTime - lastAttackTime >= 2) {
-                Debug.Log("attack at time " + currentTime);
-
                 Attack attack = new Attack("auto", gameObject, target, 10);
                 attackManager.QueueAttack(attack);
 
                 lastAttackTime = currentTime;
+
+                animator.SetBool("IsMoving", false);
+                animator.SetTrigger("IsAttacking");
             }
 
             // queue up next attack

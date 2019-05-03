@@ -72,7 +72,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
         abilityList = GetComponents<Ability>();
         abilityToCast = -1;
 
-        animator = gameObject.GetComponentInParent<Animator>();
+        animator = gameObject.GetComponent<Animator>();
     }
 
     void OnDisable() {
@@ -106,11 +106,14 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
                     lineRenderer.positionCount = 0;
                     currentAction = null;
                     showAction();
-                    animator.SetBool("IsMoving", false);
                 } else {
                     lineRenderer.positionCount = agent.path.corners.Length;
                     lineRenderer.SetPositions(agent.path.corners);
                 }
+            }
+
+            if (agent.transform.position.x == agent.destination.x && agent.transform.position.z == agent.destination.z) {
+                animator.SetBool("IsMoving", false);
             }
         }
 
@@ -129,6 +132,10 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
                 // Reset box positions.
                 boxEndPosition = boxStartPosition = Vector2.zero;
             }
+        }
+
+        if (GetSelected()) {
+            mainCameraScript.setPlayer(gameObject);
         }
 
         if (Input.GetMouseButtonUp(0)) {
@@ -172,7 +179,6 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
                     Debug.Log("Hit the Player!");
                     this.SetSelected(true);
                     rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
-                    mainCameraScript.setPlayer(this.gameObject);
                 } else {
                     this.SetSelected(false);
                     rend.material.shader = Shader.Find("Diffuse");
@@ -211,7 +217,6 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
         } else if (Input.GetKeyUp(KeyCode.Alpha2)) {
             this.SetSelected(true);
             rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
-            mainCameraScript.setPlayer(this.gameObject);
         } else if (Input.GetKeyDown(KeyCode.Alpha1)) {
             this.SetSelected(false);
             rend.material.shader = Shader.Find("Diffuse");
@@ -222,9 +227,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
             }
         }
 
-        if (this.GetSelected()) {
-            showAction();
-        }
+        showAction();
     }
 
     public bool IsDead() {
