@@ -38,8 +38,8 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
     public Texture2D cursorAbility;
     private int abilityToCast;
 
-    private Vector2 boxStartPosition;
-    private Vector2 boxEndPosition;
+    private Vector3 boxStartPosition;
+    private Vector3 boxEndPosition;
     public Texture selectTexture;
     private SelectableCharacter[] selectableChars;
 
@@ -122,25 +122,25 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
             if (Input.GetMouseButton(0)) {
                 // Called on the first update where the user has pressed the mouse button.
                 if (Input.GetMouseButtonDown(0))
-                    boxStartPosition = Input.mousePosition;
+                    boxStartPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane);
                 else  // Else we must be in "drag" mode.
-                    boxEndPosition = Input.mousePosition;
+                    boxEndPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane);
             } else {
                 // Handle the case where the player had been drawing a box but has now released.
-                if (boxEndPosition != Vector2.zero && boxStartPosition != Vector2.zero)
+                if (boxEndPosition != Vector3.zero && boxStartPosition != Vector3.zero)
                     HandleUnitSelection(boxStartPosition, boxEndPosition);
                 // Reset box positions.
-                boxEndPosition = boxStartPosition = Vector2.zero;
+                boxEndPosition = boxStartPosition = Vector3.zero;
             }
         }
 
         if (GetSelected()) {
             mainCameraScript.setPlayer(gameObject);
+            rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
         }
 
-        if (Input.GetMouseButtonUp(0)) {
-            if (abilityToCast >= 0 && this.GetSelected())
-            {
+        if (Input.GetMouseButtonDown(0)) {
+            if (abilityToCast >= 0 && this.GetSelected()) {
                 bool click = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100);
 
                 if (click) {
@@ -175,11 +175,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
                     }
                 }
             } else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100)) {
-                if (clickPosition.transform.gameObject == gameObject) {
-                    Debug.Log("Hit the Player!");
-                    this.SetSelected(true);
-                    rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
-                } else {
+                if (clickPosition.transform.gameObject != gameObject) {
                     this.SetSelected(false);
                     rend.material.shader = Shader.Find("Diffuse");
                     if (targetIndicator != null) {
@@ -358,17 +354,32 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
         }
     }
 
-    public void HandleUnitSelection(Vector2 boxStartPosition, Vector2 boxEndPosition)
+    public void HandleUnitSelection(Vector3 boxStartPosition, Vector3 boxEndPosition)
     {
+        
         selectableChars = FindObjectsOfType<SelectableCharacter>();
-        var rect = new Rect(boxStartPosition.x, Screen.height - boxStartPosition.y,
-                                boxEndPosition.x - boxStartPosition.x,
-                                -1 * (boxEndPosition.y - boxStartPosition.y));
-
+        Rect rect;
+        float width = Mathf.Abs(boxStartPosition.x - boxEndPosition.x);
+        float height = Mathf.Abs(boxStartPosition.y - boxEndPosition.y);
+        if (boxStartPosition.x <= boxEndPosition.x) {
+            if (boxStartPosition.y <= boxEndPosition.y) {
+                rect = new Rect(boxStartPosition.x, boxStartPosition.y, width, height);
+            } else {
+                rect = new Rect(boxStartPosition.x, boxEndPosition.y, width, height);
+            }
+        } else {
+            if (boxStartPosition.y <= boxEndPosition.y) {
+                rect = new Rect(boxEndPosition.x, boxStartPosition.y, width, height);
+            } else {
+                rect = new Rect(boxEndPosition.x, boxEndPosition.y, width, height);
+            }
+        }
+       
         foreach (SelectableCharacter selChar in selectableChars)
-        {
-            if (rect.Contains(mainCamera.WorldToScreenPoint(selChar.gameObject.transform.position)))
-            {
+        {          
+            Vector2 position = mainCamera.WorldToScreenPoint(selChar.gameObject.transform.position);
+            Rect charRect = new Rect(position.x - 50, position.y, 100, 150);
+            if (charRect.Overlaps(rect)) {
                 selChar.SetSelected(true);
             }
         }
@@ -378,7 +389,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
     {
         
         // If we are in the middle of a selection draw the texture.
-        if (boxStartPosition != Vector2.zero && boxEndPosition != Vector2.zero)
+        if (boxStartPosition != Vector3.zero && boxEndPosition != Vector3.zero)
         {
 
             GUI.color = new Color(1.0f, 1.0f, 1.0f, 0.5f); //0.5 is half opacity

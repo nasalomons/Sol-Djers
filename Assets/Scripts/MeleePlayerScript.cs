@@ -102,15 +102,12 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
 
         if (GetSelected()) {
             mainCameraScript.setPlayer(gameObject);
+            rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
         }
 
         if (Input.GetMouseButtonDown(0)) {
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100)) {
-                if (clickPosition.transform.gameObject == gameObject) {
-                    Debug.Log("Hit the Player!");
-                    this.SetSelected(true);
-                    rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
-                } else {
+                if (clickPosition.transform.gameObject != gameObject) {
                     this.SetSelected(false);
                     rend.material.shader = Shader.Find("Diffuse");
                     if (targetIndicator != null) {
