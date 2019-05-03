@@ -26,15 +26,17 @@ public class HealthScript : MonoBehaviour {
     }
 
     void Update() {
-        overhead.transform.position = gameObject.transform.position + new Vector3(0, 5.5f, 0);
-        if (currentHealth == maxHealth && !gameObject.tag.Equals("Ally")) {
-            overhead.SetActive(false);
-        } else {
-            overhead.SetActive(true);            
-        }
+        if (overhead != null) {
+            overhead.transform.position = gameObject.transform.position + new Vector3(0, 5.5f, 0);
+            if (currentHealth == maxHealth && !gameObject.tag.Equals("Ally")) {
+                overhead.SetActive(false);
+            } else {
+                overhead.SetActive(true);
+            }
 
-        if (currentHealth <= 0) {
-            Destroy(overhead);
+            if (currentHealth <= 0) {
+                Destroy(overhead);
+            }
         }
     }
 

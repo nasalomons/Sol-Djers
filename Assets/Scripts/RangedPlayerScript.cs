@@ -283,6 +283,9 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
             return;
         }
         GameObject target = temp.gameObject;
+        if (target.GetComponent<AttackableGameObject>().IsDead()) {
+            return;
+        }
 
         // if within attack range attack
         if ((transform.position - target.transform.position).magnitude <= ATTACK_RANGE) {
@@ -294,9 +297,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
 
             // if we havent attacked in 2 seconds
             long currentTime = timeManager.getTimeSeconds();
-            if (currentTime - lastAttackTime >= 2) {
-                Debug.Log("attack at time " + currentTime);
-              
+            if (currentTime - lastAttackTime >= 2) {              
                 Attack attack = new Attack("auto", gameObject, target, 10);
                 GameObject autoAttack = Instantiate(autoAttackPrefab, transform.position + transform.forward * 1.5f, transform.rotation);
                 autoAttack.GetComponent<RangedAutoAttackProjectile>().setAttack(attack);

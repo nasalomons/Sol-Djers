@@ -198,6 +198,9 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
             return;
         }
         GameObject target = temp.gameObject;
+        if (target.GetComponent<AttackableGameObject>().IsDead()) {
+            return;
+        }
 
         // if within attack range attack
         if ((transform.position - target.transform.position).magnitude <= ATTACK_RANGE) {

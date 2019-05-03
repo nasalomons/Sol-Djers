@@ -72,7 +72,6 @@
     <Compile Include="Assets\Scripts\CameraScript.cs" />
     <Compile Include="Assets\Scripts\DoorScript.cs" />
     <Compile Include="Assets\Scripts\DummyScript.cs" />
-    <Compile Include="Assets\Scripts\FollowScript.cs" />
     <Compile Include="Assets\Scripts\HealthScript.cs" />
     <Compile Include="Assets\Scripts\Managers\AttackManager.cs" />
     <Compile Include="Assets\Scripts\Managers\EventManager.cs" />
