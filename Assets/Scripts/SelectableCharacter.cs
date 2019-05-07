@@ -13,8 +13,6 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
 
     /* Dividing Line for Stuff from RangedPlayerScript */
 
-    protected readonly float ATTACK_RANGE = 2.5f;
-
     protected NavMeshAgent agent;
     protected CameraScript mainCameraScript;
     protected Camera mainCamera;
@@ -29,7 +27,6 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
     protected AttackManager attackManager;
 
     protected bool lastPauseStatus;
-    protected Renderer rend;
 
     protected Action currentAction;
     protected long lastAttackTime;
@@ -68,7 +65,6 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
         autoAttackPrefab = Resources.Load("RangedAutoAttack") as GameObject;
 
         lastPauseStatus = false;
-        rend = transform.gameObject.GetComponentInChildren<Renderer>();
         lastAttackTime = 0;
 
         overhead = gameObject.GetComponent<HealthScript>();
@@ -88,11 +84,6 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
     public bool GetSelected()
     {
         return selected;
-    }
-
-    public Renderer GetRenderer()
-    {
-        return rend;
     }
 
     public GameObject GetTargetIndicator()
@@ -159,15 +150,9 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
             {
                 animator.SetBool("IsMoving", false);
             }
-        }
+        }      
 
-        if (GetSelected())
-        {
-            mainCameraScript.setPlayer(gameObject);
-            rend.material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
-        }
-
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
         {
             if (abilityToCast >= 0 && this.GetSelected())
             {
@@ -324,53 +309,7 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
         }
     }
 
-    protected void DoAttackAction(Action action)
-    {
-        Transform temp = action.getDestination().transform;
-        if (temp == null)
-        {
-            return;
-        }
-        GameObject target = temp.gameObject;
-        if (target.GetComponent<AttackableGameObject>().IsDead())
-        {
-            return;
-        }
-
-        // if within attack range attack
-        if ((transform.position - target.transform.position).magnitude <= ATTACK_RANGE)
-        {
-            currentAction = action;
-
-            // stop moving
-            agent.destination = transform.position;
-            transform.LookAt(target.transform.position);
-
-            // if we havent attacked in 2 seconds
-            long currentTime = timeManager.getTimeSeconds();
-            if (currentTime - lastAttackTime >= 2)
-            {
-                Attack attack = new Attack("auto", gameObject, target, 10);
-                GameObject autoAttack = Instantiate(autoAttackPrefab, transform.position + transform.forward * 1.5f, transform.rotation);
-                autoAttack.GetComponent<RangedAutoAttackProjectile>().setAttack(attack);
-
-                lastAttackTime = currentTime;
-
-                animator.SetBool("IsMoving", false);
-                animator.SetTrigger("IsAttacking");
-            }
-
-            // queue up next attack
-            eventManager.QueueAction(action);
-
-            // if not in range then move in range
-        }
-        else
-        {
-            Action newAction = new Action("move", this, action.getDestination(), action);
-            eventManager.QueueAction(newAction);
-        }
-    }
+    protected abstract void DoAttackAction(Action action);
 
     public void OnActionEvent(Action action)
     {

@@ -9,7 +9,7 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
 
     private readonly float ATTACK_RANGE = 2.5f;    
 
-    private void DoAttackAction(Action action) {
+    protected override void DoAttackAction(Action action) {
         Transform temp = action.getDestination().transform;       
         if (temp == null) {
             return;
@@ -45,29 +45,6 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
         } else {
             Action newAction = new Action("move", this, action.getDestination(), action);
             eventManager.QueueAction(newAction);
-        }
-    }
-
-    public void OnActionEvent(EventManager.Action action) {
-        if (action.getName().Equals("move")) {
-            DoMovementAction(action, action.getNextAction());
-        } else if (action.getName().Equals("autoattack")) {
-            DoAttackAction(action);
-        }
-        showAction();
-    }
-
-    public void OnAttacked(AttackManager.Attack attack) {
-        if (attack.getTarget().Equals(gameObject)) {
-            if (overhead.TakeDamage(attack.getDamage())) {
-                // alive
-                if (attack.getAbility() != null) {
-                    attack.getAbility().DoAbilityEffect(gameObject);
-                }
-            } else {
-                // dead
-                isDead = true;             
-            }
         }
     }
 }

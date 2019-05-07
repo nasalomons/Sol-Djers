@@ -1489,6 +1489,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 1724242447}
+  cursorAbility: {fileID: 0}
 --- !u!195 &272865509
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -5495,6 +5496,11 @@ PrefabInstance:
       propertyPath: m_Speed
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 2445114610824898343, guid: ea70b58feddfc51489e163b37a42846d,
+        type: 3}
+      propertyPath: m_ObstacleAvoidanceType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3369156023706890285, guid: ea70b58feddfc51489e163b37a42846d,
         type: 3}
       propertyPath: lineRenderer
@@ -6622,7 +6628,7 @@ PrefabInstance:
     - target: {fileID: 5286342725011107921, guid: 7787d300a80fb244fa25c6e6e9fd26ec,
         type: 3}
       propertyPath: m_ObstacleAvoidanceType
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5286342725011107921, guid: 7787d300a80fb244fa25c6e6e9fd26ec,
         type: 3}
