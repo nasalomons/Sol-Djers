@@ -8,7 +8,7 @@ using static EventManager;
 // Melee enemies will move until they are within melee distance of the player. Once they are in melee distance they stop moving. If the player moves away,
 // melee enemies will immediately begin to move towards the player.
 public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
-    private readonly float MELEE_DISTANCE = 2;
+    private readonly float MELEE_DISTANCE = 4;
     private readonly float MELEE_ATTACK_CD = 1.5f;
 
     private NavMeshAgent agent;
@@ -20,21 +20,22 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
     private HealthScript healthBar;
     private float lastAttackTime;
     private bool isDead;
+    private Animator animator;
 
     public List<GameObject> players;
 
     // Start is called before the first frame update
     void Start() {
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponentInParent<NavMeshAgent>();
         pauseManager = PauseManager.Instance;
         attackManager = AttackManager.Instance;
         attackManager.Subscribe(this);
         timeManager = TimeManager.Instance;
         lastPauseStatus = false;
-        ChooseTarget();
         healthBar = gameObject.GetComponent<HealthScript>();
         lastAttackTime = -MELEE_ATTACK_CD;
         isDead = false;
+        animator = GetComponentInParent<Animator>();
     }
 
     // Update is called once per frame
@@ -44,12 +45,14 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
             if (!lastPauseStatus) {
                 lastPauseStatus = true;
                 agent.isStopped = true;
+                animator.enabled = false;
             }
         } else {
             // If we aren't paused, but this still is
             if (lastPauseStatus) {
                 lastPauseStatus = false;
                 agent.isStopped = false;
+                animator.enabled = true;
             }
 
             if (currentTarget != null) {
@@ -61,6 +64,7 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                     float distance = (transform.position - playerPosition).magnitude;
                     if (distance > MELEE_DISTANCE) {
                         agent.destination = playerPosition;
+                        animator.SetBool("IsMoving", true);
                         ChooseTarget();
                     } else {
                         agent.destination = agent.transform.position;
@@ -68,8 +72,15 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                             Attack attack = new Attack("autoattack", gameObject, currentTarget, 10);
                             attackManager.QueueAttack(attack);
                             lastAttackTime = timeManager.getTimeSeconds();
+                            animator.SetBool("IsMoving", false);
+                            animator.SetTrigger("IsAttacking");
                         }
                     }
+                }
+            } else {
+                ChooseTarget();
+                if (currentTarget == null) {
+                    animator.SetBool("IsMoving", false);
                 }
             }
         }

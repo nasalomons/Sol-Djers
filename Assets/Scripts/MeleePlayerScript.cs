@@ -7,7 +7,7 @@ using static AttackManager;
 
 public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, AttackableGameObject {
 
-    private readonly float ATTACK_RANGE = 2.5f;    
+    private readonly float ATTACK_RANGE = 4;    
 
     protected override void DoAttackAction(Action action) {
         Transform temp = action.getDestination().transform;       
@@ -34,8 +34,8 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
 
                 lastAttackTime = currentTime;
 
-                animator.SetBool("IsMoving", false);
                 animator.SetTrigger("IsAttacking");
+                animator.SetBool("IsMoving", false);
             }
 
             // queue up next attack
