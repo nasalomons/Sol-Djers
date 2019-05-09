@@ -51,7 +51,12 @@ public class HealthScript : MonoBehaviour {
     }
 
     public void UpdateAction(CurrentAction action) {
-        Image status = overhead.transform.GetChild(1).GetChild(2).GetComponent<Image>();
+        Image status;
+        try {
+            status = overhead.transform.GetChild(1).GetChild(2).GetComponent<Image>();
+        } catch (MissingReferenceException) {
+            return;
+        }
         switch (action) {
             case CurrentAction.NONE:
                 overhead.transform.GetChild(1).gameObject.SetActive(false);

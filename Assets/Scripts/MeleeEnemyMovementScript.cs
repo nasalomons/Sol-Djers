@@ -108,6 +108,7 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                 // alive
             } else {
                 // dead
+                animator.SetTrigger("IsDead");
                 attackManager.Unsubscribe(this);
                 Destroy(gameObject);
                 Destroy(this);
