@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\DummyScript.cs" />
     <Compile Include="Assets\Scripts\HealthScript.cs" />
     <Compile Include="Assets\Scripts\Managers\AttackManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\CutsceneManager.cs" />
     <Compile Include="Assets\Scripts\Managers\EventManager.cs" />
     <Compile Include="Assets\Scripts\Managers\PauseManager.cs" />
     <Compile Include="Assets\Scripts\Managers\SelectManager.cs" />
@@ -86,7 +87,9 @@
     <Compile Include="Assets\Scripts\ProjectileScripts\TargetedProjectileScript.cs" />
     <Compile Include="Assets\Scripts\RangedEnemyMovementScript.cs" />
     <Compile Include="Assets\Scripts\RangedPlayerScript.cs" />
+    <Compile Include="Assets\Scripts\SceneChanger.cs" />
     <Compile Include="Assets\Scripts\SelectableCharacter.cs" />
+    <Compile Include="Assets\Scripts\TeacherScript.cs" />
     <Compile Include="Assets\Scripts\TutorialScript.cs" />
     <Compile Include="Assets\VolumetricLines\ExampleScenes\ExampleScripts\CannonBehavior.cs" />
     <Compile Include="Assets\VolumetricLines\ExampleScenes\ExampleScripts\CreateSinShapedLineStrip.cs" />

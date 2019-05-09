@@ -25,6 +25,7 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
     protected PauseManager pauseManager;
     protected TimeManager timeManager;
     protected AttackManager attackManager;
+    private CutsceneManager cutsceneManager;
 
     protected bool lastPauseStatus;
 
@@ -59,6 +60,7 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
         timeManager = TimeManager.Instance;
         attackManager = AttackManager.Instance;
         attackManager.Subscribe(this);
+        cutsceneManager = CutsceneManager.Instance;
 
         targetIndicatorPrefab = Resources.Load("TargetPoint") as GameObject;
         targetIndicator = null;
@@ -106,144 +108,109 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
     // Update is called once per frame
     void Update()
     {
-        if (pauseManager.IsPaused())
-        {
-            // If we are now paused, and this isn't paused yet
-            if (!lastPauseStatus)
-            {
-                lastPauseStatus = true;
-                agent.isStopped = true;
-                animator.enabled = false;
-            }
-
-        }
-        else
-        {
-            // If we aren't paused, but this still is
-            if (lastPauseStatus)
-            {
-                lastPauseStatus = false;
-                agent.isStopped = false;
-                animator.enabled = true;
-            }
-
-            // Player is currently moving
-            if (targetIndicator != null)
-            {
-                // Checks if player has reached the destination
-                if (agent.transform.position.x == agent.destination.x && agent.transform.position.z == agent.destination.z)
-                {
-                    GameObject.Destroy(targetIndicator);
-                    targetIndicator = null;
-                    lineRenderer.positionCount = 0;
-                    currentAction = null;
-                    showAction();
+        if (!cutsceneManager.CutsceneHappening()) {
+            if (pauseManager.IsPaused()) {
+                // If we are now paused, and this isn't paused yet
+                if (!lastPauseStatus) {
+                    lastPauseStatus = true;
+                    agent.isStopped = true;
+                    animator.enabled = false;
                 }
-                else
-                {
-                    lineRenderer.positionCount = agent.path.corners.Length;
-                    lineRenderer.SetPositions(agent.path.corners);
+
+            } else {
+                // If we aren't paused, but this still is
+                if (lastPauseStatus) {
+                    lastPauseStatus = false;
+                    agent.isStopped = false;
+                    animator.enabled = true;
+                }
+
+                // Player is currently moving
+                if (targetIndicator != null) {
+                    // Checks if player has reached the destination
+                    if (agent.transform.position.x == agent.destination.x && agent.transform.position.z == agent.destination.z) {
+                        GameObject.Destroy(targetIndicator);
+                        targetIndicator = null;
+                        lineRenderer.positionCount = 0;
+                        currentAction = null;
+                        showAction();
+                    } else {
+                        lineRenderer.positionCount = agent.path.corners.Length;
+                        lineRenderer.SetPositions(agent.path.corners);
+                    }
+                }
+
+                if (agent.transform.position.x == agent.destination.x && agent.transform.position.z == agent.destination.z) {
+                    animator.SetBool("IsMoving", false);
                 }
             }
 
-            if (agent.transform.position.x == agent.destination.x && agent.transform.position.z == agent.destination.z)
-            {
-                animator.SetBool("IsMoving", false);
-            }
-        }      
+            if (Input.GetMouseButtonUp(0)) {
+                if (abilityToCast >= 0 && this.GetSelected()) {
+                    bool click = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100);
 
-        if (Input.GetMouseButtonUp(0))
-        {
-            if (abilityToCast >= 0 && this.GetSelected())
-            {
+                    if (click) {
+                        Action action = null;
+                        if (selectManager.GetNumSelected() == 1 && this.GetSelected()) {
+                            if (clickPosition.transform.gameObject.tag == "Enemy") {
+                                if (abilityList[abilityToCast].IsCastable()) {
+                                    action = new Action("ability" + abilityToCast, this, clickPosition);
+                                    Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                                } else {
+                                    Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                                }
+                            } else if (abilityToCast == 1 && clickPosition.transform.gameObject.tag == "Ally") {
+                                if (abilityList[1].IsCastable()) {
+                                    action = new Action("ability" + abilityToCast, this, clickPosition);
+                                    Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                                } else {
+                                    Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                                }
+                            }
+                        } else {
+                            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                        }
+
+                        abilityToCast = -1;
+                        selectManager.SetAbilityReady(false);
+
+                        eventManager.QueueAction(action);
+
+                        if (pauseManager.IsPaused()) {
+                            currentAction = action;
+                        }
+                    }
+                }
+            } else if (Input.GetMouseButton(1) && this.GetSelected()) {
                 bool click = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100);
+                RaycastHit[] hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
 
-                if (click)
-                {
+                if (click) {
                     Action action = null;
-                    if (selectManager.GetNumSelected() == 1 && this.GetSelected())
-                    {
-                        if (clickPosition.transform.gameObject.tag == "Enemy")
-                        {
-                            if (abilityList[abilityToCast].IsCastable())
-                            {
-                                action = new Action("ability" + abilityToCast, this, clickPosition);
-                                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                            }
-                            else
-                            {
-                                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                            }
-                        }
-                        else if (abilityToCast == 1 && clickPosition.transform.gameObject.tag == "Ally")
-                        {
-                            if (abilityList[1].IsCastable())
-                            {
-                                action = new Action("ability" + abilityToCast, this, clickPosition);
-                                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                            }
-                            else
-                            {
-                                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                            }
-                        }
+                    if (clickPosition.transform.gameObject.tag == "Enemy") {
+                        action = new Action("autoattack", this, clickPosition);
+                    } else {
+                        action = new Action("move", this, hits[hits.Length - 1]);
                     }
-                    else
-                    {
-                        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                    }
-
-                    abilityToCast = -1;
-                    selectManager.SetAbilityReady(false);
 
                     eventManager.QueueAction(action);
 
-                    if (pauseManager.IsPaused())
-                    {
+                    if (pauseManager.IsPaused()) {
                         currentAction = action;
                     }
                 }
+            } else if (Input.GetKeyDown(KeyCode.Q) && this.GetSelected()) {
+                Cursor.SetCursor(cursorAbility, Vector2.zero, CursorMode.Auto);
+                abilityToCast = 0;
+                selectManager.SetAbilityReady(true);
+            } else if (Input.GetKeyDown(KeyCode.W) && this.GetSelected()) {
+                Cursor.SetCursor(cursorAbility, Vector2.zero, CursorMode.Auto);
+                abilityToCast = 1;
+                selectManager.SetAbilityReady(true);
             }
-        }
-        else if (Input.GetMouseButton(1) && this.GetSelected())
-        {
-            bool click = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100);
-            RaycastHit[] hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
 
-            if (click)
-            {
-                Action action = null;
-                if (clickPosition.transform.gameObject.tag == "Enemy")
-                {
-                    action = new Action("autoattack", this, clickPosition);
-                }
-                else
-                {
-                    action = new Action("move", this, hits[hits.Length - 1]);
-                }
-
-                eventManager.QueueAction(action);
-
-                if (pauseManager.IsPaused())
-                {
-                    currentAction = action;
-                }
-            }
+            showAction();
         }
-        else if (Input.GetKeyDown(KeyCode.Q) && this.GetSelected())
-        {
-            Cursor.SetCursor(cursorAbility, Vector2.zero, CursorMode.Auto);
-            abilityToCast = 0;
-            selectManager.SetAbilityReady(true);
-        }
-        else if (Input.GetKeyDown(KeyCode.W) && this.GetSelected())
-        {
-            Cursor.SetCursor(cursorAbility, Vector2.zero, CursorMode.Auto);
-            abilityToCast = 1;
-            selectManager.SetAbilityReady(true);
-        }
-
-        showAction();
     }
 
     public bool IsDead()

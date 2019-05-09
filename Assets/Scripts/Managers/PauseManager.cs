@@ -29,15 +29,20 @@ public sealed class PauseManager : MonoBehaviour {
         return paused;
     }
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
+    public void TogglePause() {
+        if (!CutsceneManager.Instance.CutsceneHappening()) {
             paused = paused ? false : true;
             if (paused) {
                 pausedText.SetActive(true);
             } else {
                 pausedText.SetActive(false);
             }
-              
+        }
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            TogglePause();             
         }
     }
 }

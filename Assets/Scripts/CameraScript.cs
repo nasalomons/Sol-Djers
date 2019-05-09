@@ -8,10 +8,10 @@ public class CameraScript : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 15, player.transform.position.z - 9);
+        transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 20, player.transform.position.z - 9);
     }
 
-    public void setPlayer(GameObject player) {
+    public void SetPlayer(GameObject player) {
         this.player = player;
     }
 }

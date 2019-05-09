@@ -51,7 +51,7 @@ public class SelectManager : MonoBehaviour
         {
             HandleUnitSelection(Vector3.zero, Vector3.zero);
             selectableChars[0].SetSelected(true);
-            mainCameraScript.setPlayer(selectableChars[0].gameObject);
+            mainCameraScript.SetPlayer(selectableChars[0].gameObject);
             selectableChars[0].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
             selectableChars[1].SetSelected(false);
             selectableChars[1].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
@@ -62,7 +62,7 @@ public class SelectManager : MonoBehaviour
             HandleUnitSelection(Vector3.zero, Vector3.zero);
             selectableChars[1].SetSelected(true);
             numSelected = 1;
-            mainCameraScript.setPlayer(selectableChars[1].gameObject);
+            mainCameraScript.SetPlayer(selectableChars[1].gameObject);
             selectableChars[1].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
             selectableChars[0].SetSelected(false);
             selectableChars[0].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
@@ -106,7 +106,7 @@ public class SelectManager : MonoBehaviour
             if (charRect.Overlaps(rect)) {
                 selChar.SetSelected(true);
                 numSelected++;
-                mainCameraScript.setPlayer(selChar.gameObject);
+                mainCameraScript.SetPlayer(selChar.gameObject);
                 selChar.gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
             } else {
                 selChar.SetSelected(false);
