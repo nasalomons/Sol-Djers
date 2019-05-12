@@ -40,6 +40,16 @@ public sealed class PauseManager : MonoBehaviour {
         }
     }
 
+    public void SetPause(bool toSet) {
+        if (toSet) {
+            paused = true;
+            pausedText.SetActive(true);
+        } else {
+            paused = false;
+            pausedText.SetActive(false);
+        }
+    }
+
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             TogglePause();             

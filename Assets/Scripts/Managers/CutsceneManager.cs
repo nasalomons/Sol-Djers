@@ -60,7 +60,7 @@ public class CutsceneManager : MonoBehaviour {
 
     private void EndCutscene() {
         inCutscene = false;
-        PauseManager.Instance.TogglePause();
+        PauseManager.Instance.SetPause(true);
     }
 
     public bool CutsceneHappening() {

@@ -7,6 +7,9 @@ using UnityEngine.UI;
 public class SceneChanger : MonoBehaviour {
     public GameObject[] dummies;
     public Image fade;
+    public GameObject menu;
+
+    private bool lastPauseState;
 
     // Update is called once per frame
     void Update() {
@@ -18,6 +21,17 @@ public class SceneChanger : MonoBehaviour {
         }
         if (count == 2) {
             StartCoroutine("Fade");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            if (menu.activeSelf) {
+                menu.SetActive(false);
+                PauseManager.Instance.SetPause(lastPauseState);
+            } else {
+                menu.SetActive(true);
+                lastPauseState = PauseManager.Instance.IsPaused();
+                PauseManager.Instance.SetPause(true);
+            }
         }
     }
 
