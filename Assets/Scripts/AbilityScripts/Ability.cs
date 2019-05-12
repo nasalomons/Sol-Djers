@@ -25,6 +25,10 @@ public abstract class Ability : MonoBehaviour {
         lastAttackTime = timeManager.getTimeSeconds();
     }
 
+    public int Cooldown() {
+        return Mathf.Max(0, Mathf.RoundToInt(cooldown - (timeManager.getTimeSeconds() - lastAttackTime)));
+    }
+
     // This function should be called after an ActionableGameObject is told it can use the ability by the EventManager. 
     // This function will send the ability information to the AttackManager.
     // Call AbilityCasted() at the end.

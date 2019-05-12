@@ -73,9 +73,11 @@
     <Compile Include="Assets\Scripts\DoorScript.cs" />
     <Compile Include="Assets\Scripts\DummyScript.cs" />
     <Compile Include="Assets\Scripts\HealthScript.cs" />
+    <Compile Include="Assets\Scripts\HotbarButtonScript.cs" />
     <Compile Include="Assets\Scripts\Managers\AttackManager.cs" />
     <Compile Include="Assets\Scripts\Managers\CutsceneManager.cs" />
     <Compile Include="Assets\Scripts\Managers\EventManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\HotbarManager.cs" />
     <Compile Include="Assets\Scripts\Managers\PauseManager.cs" />
     <Compile Include="Assets\Scripts\Managers\SelectManager.cs" />
     <Compile Include="Assets\Scripts\Managers\TimeManager.cs" />

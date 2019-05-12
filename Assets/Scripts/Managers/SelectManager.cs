@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SelectManager : MonoBehaviour
 {
+    private static SelectManager selectManager;
     private Vector3 boxStartPosition;
     private Vector3 boxEndPosition;
     public Texture selectTexture;
@@ -12,23 +14,33 @@ public class SelectManager : MonoBehaviour
     private CameraScript mainCameraScript;
     private bool abilityReady;
     private int numSelected;
+    private bool overButton;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    public static SelectManager Instance {
+        get {
+            if (selectManager == null) {
+                selectManager = FindObjectOfType(typeof(SelectManager)) as SelectManager;
+                selectManager.SetUp();
+            }
+
+            return selectManager;
+        }
+    }
+
+    private void SetUp() {
         boxStartPosition = Vector3.zero;
         boxEndPosition = Vector3.zero;
         selectableChars = FindObjectsOfType<SelectableCharacter>();
         mainCamera = Camera.main;
         mainCameraScript = mainCamera.GetComponent<CameraScript>();
         numSelected = 0;
+        overButton = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (abilityReady == false)
-        {
+        if (!abilityReady && !overButton) {
             if (Input.GetMouseButton(0))
             {
                 // Called on the first update where the user has pressed the mouse button.
@@ -102,7 +114,7 @@ public class SelectManager : MonoBehaviour
         foreach (SelectableCharacter selChar in selectableChars)
         {
             Vector2 position = mainCamera.WorldToScreenPoint(selChar.gameObject.transform.position);
-            Rect charRect = new Rect(position.x - 50, position.y, 100, 150);
+            Rect charRect = new Rect(position.x - 50, position.y, 100, 100);
             if (charRect.Overlaps(rect)) {
                 selChar.SetSelected(true);
                 numSelected++;
@@ -140,6 +152,10 @@ public class SelectManager : MonoBehaviour
         return abilityReady;
     }
 
+    public void SetOverButton(bool val) {
+        overButton = val;
+    }
+
     public int GetNumSelected()
     {
         return numSelected;
@@ -148,6 +164,16 @@ public class SelectManager : MonoBehaviour
     public void SetNumSelected(int val)
     {
         numSelected = val;
+    }
+
+    public List<SelectableCharacter> GetCurrentlySelected() {
+        List<SelectableCharacter> chars = new List<SelectableCharacter>();
+        foreach (SelectableCharacter selChar in selectableChars) {
+            if (selChar.GetSelected()) {
+                chars.Add(selChar);
+            }
+        }
+        return chars;
     }
 
     public void OnGUI()

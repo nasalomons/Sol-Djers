@@ -44,9 +44,11 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
 
     protected Animator animator;
 
+    private bool hotbarClicked;
+
     public void Start()
     {
-        selectManager = FindObjectOfType<SelectManager>();
+        selectManager = SelectManager.Instance;
 
         /* Dividing Line for Stuff from RangedPlayerScript */
 
@@ -76,6 +78,8 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
         abilityToCast = -1;
 
         animator = gameObject.GetComponent<Animator>();
+
+        hotbarClicked = false;
     }
 
     public void SetSelected(bool val)
@@ -101,6 +105,10 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
     public LineRenderer GetLineRenderer()
     {
         return lineRenderer;
+    }
+
+    public void HotbarClicked() {
+        hotbarClicked = true;
     }
 
     /************ Dividing Line for stuff from RangedPlayerScript **************/
@@ -133,7 +141,7 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
                         targetIndicator = null;
                         lineRenderer.positionCount = 0;
                         currentAction = null;
-                        showAction();
+                        ShowAction();
                     } else {
                         lineRenderer.positionCount = agent.path.corners.Length;
                         lineRenderer.SetPositions(agent.path.corners);
@@ -146,38 +154,42 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
             }
 
             if (Input.GetMouseButtonUp(0)) {
-                if (abilityToCast >= 0 && this.GetSelected()) {
-                    bool click = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100);
+                if (hotbarClicked) {
+                    hotbarClicked = false;
+                } else {
+                    if (abilityToCast >= 0 && this.GetSelected()) {
+                        bool click = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit clickPosition, 100);
 
-                    if (click) {
-                        Action action = null;
-                        if (selectManager.GetNumSelected() == 1 && this.GetSelected()) {
-                            if (clickPosition.transform.gameObject.tag == "Enemy") {
-                                if (abilityList[abilityToCast].IsCastable()) {
-                                    action = new Action("ability" + abilityToCast, this, clickPosition);
-                                    Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                                } else {
-                                    Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                        if (click) {
+                            Action action = null;
+                            if (selectManager.GetNumSelected() == 1 && this.GetSelected()) {
+                                if (clickPosition.transform.gameObject.tag == "Enemy") {
+                                    if (abilityList[abilityToCast].IsCastable()) {
+                                        action = new Action("ability" + abilityToCast, this, clickPosition);
+                                        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                                    } else {
+                                        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                                    }
+                                } else if (abilityToCast == 1 && clickPosition.transform.gameObject.tag == "Ally") {
+                                    if (abilityList[abilityToCast].IsCastable()) {
+                                        action = new Action("ability" + abilityToCast, this, clickPosition);
+                                        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                                    } else {
+                                        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                                    }
                                 }
-                            } else if (abilityToCast == 1 && clickPosition.transform.gameObject.tag == "Ally") {
-                                if (abilityList[1].IsCastable()) {
-                                    action = new Action("ability" + abilityToCast, this, clickPosition);
-                                    Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                                } else {
-                                    Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                                }
+                            } else {
+                                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                             }
-                        } else {
-                            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                        }
 
-                        abilityToCast = -1;
-                        selectManager.SetAbilityReady(false);
+                            abilityToCast = -1;
+                            selectManager.SetAbilityReady(false);
 
-                        eventManager.QueueAction(action);
+                            eventManager.QueueAction(action);
 
-                        if (pauseManager.IsPaused()) {
-                            currentAction = action;
+                            if (pauseManager.IsPaused()) {
+                                currentAction = action;
+                            }
                         }
                     }
                 }
@@ -200,17 +212,19 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
                     }
                 }
             } else if (Input.GetKeyDown(KeyCode.Q) && this.GetSelected()) {
-                Cursor.SetCursor(cursorAbility, Vector2.zero, CursorMode.Auto);
-                abilityToCast = 0;
-                selectManager.SetAbilityReady(true);
+                PrepareAbility(0);
             } else if (Input.GetKeyDown(KeyCode.W) && this.GetSelected()) {
-                Cursor.SetCursor(cursorAbility, Vector2.zero, CursorMode.Auto);
-                abilityToCast = 1;
-                selectManager.SetAbilityReady(true);
+                PrepareAbility(1);
             }
 
-            showAction();
+            ShowAction();
         }
+    }
+
+    public void PrepareAbility(int abilityIndex) {
+        Cursor.SetCursor(cursorAbility, Vector2.zero, CursorMode.Auto);
+        abilityToCast = abilityIndex;
+        selectManager.SetAbilityReady(true);
     }
 
     public bool IsDead()
@@ -218,7 +232,11 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
         return isDead;
     }
 
-    public void showAction()
+    public Ability[] GetAbilities() {
+        return abilityList;
+    }
+
+    public void ShowAction()
     {
         if (currentAction == null)
         {
@@ -308,7 +326,7 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
                 abilityList[1].CastAbility(gameObject, target);
             }
         }
-        showAction();
+        ShowAction();
     }
 
     public void OnAttacked(AttackManager.Attack attack)
