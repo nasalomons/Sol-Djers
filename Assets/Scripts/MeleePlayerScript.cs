@@ -25,6 +25,7 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
 
             // stop moving
             agent.destination = transform.position;
+            transform.LookAt(new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
 
             // if we havent attacked in 2 seconds
             long currentTime = timeManager.getTimeSeconds();

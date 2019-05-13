@@ -77,6 +77,7 @@
     <Compile Include="Assets\Scripts\Managers\AttackManager.cs" />
     <Compile Include="Assets\Scripts\Managers\CutsceneManager.cs" />
     <Compile Include="Assets\Scripts\Managers\EventManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\GameState.cs" />
     <Compile Include="Assets\Scripts\Managers\HotbarManager.cs" />
     <Compile Include="Assets\Scripts\Managers\PauseManager.cs" />
     <Compile Include="Assets\Scripts\Managers\SceneChanger.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Assets\Scripts\MeleePlayerScript.cs" />
     <Compile Include="Assets\Scripts\MenuNavigation\MainMenu.cs" />
     <Compile Include="Assets\Scripts\MenuNavigation\QuitToMenu.cs" />
+    <Compile Include="Assets\Scripts\MenuNavigation\Restart.cs" />
     <Compile Include="Assets\Scripts\MenuNavigation\Resume.cs" />
     <Compile Include="Assets\Scripts\ProjectileScripts\RangedAutoAttackProjectile.cs" />
     <Compile Include="Assets\Scripts\ProjectileScripts\SplittingRayProjectileScript.cs" />

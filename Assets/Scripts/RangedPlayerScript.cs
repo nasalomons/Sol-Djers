@@ -5,10 +5,8 @@ using UnityEngine.AI;
 using static EventManager;
 using static AttackManager;
 
-public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, AttackableGameObject {
-
-    
-    private readonly float ATTACK_RANGE = 6f;
+public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, AttackableGameObject {    
+    private readonly float ATTACK_RANGE = 10;
 
     protected override void DoAttackAction(Action action) {
         Transform temp = action.getDestination().transform;
@@ -26,7 +24,7 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
 
             // stop moving
             agent.destination = transform.position;
-            transform.LookAt(target.transform.position);
+            transform.LookAt(new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
 
             // if we havent attacked in 2 seconds
             long currentTime = timeManager.getTimeSeconds();

@@ -9,7 +9,7 @@ using static EventManager;
 // melee enemies will immediately begin to move towards the player.
 public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
     private readonly float MELEE_DISTANCE = 4;
-    private readonly float MELEE_ATTACK_CD = 1.5f;
+    private readonly float MELEE_ATTACK_CD = 2.5f;
 
     private NavMeshAgent agent;
     private PauseManager pauseManager;
@@ -68,7 +68,8 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                 }
 
                 if (currentTarget != null) {
-                    if (currentTarget.GetComponent<AttackableGameObject>().IsDead()) {
+                    AttackableGameObject target = currentTarget.GetComponent<AttackableGameObject>();
+                    if (target == null || target.IsDead()) {
                         players.Remove(currentTarget);
                         ChooseTarget();
                     } else {
@@ -93,6 +94,7 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
             ChooseTarget();
         } else {
             agent.destination = agent.transform.position;
+            transform.LookAt(new Vector3(currentTarget.transform.position.x, transform.position.y, currentTarget.transform.position.z));
             if (timeManager.getTimeSeconds() - lastAttackTime > MELEE_ATTACK_CD) {
                 Attack attack = new Attack("autoattack", gameObject, currentTarget, 10);
                 attackManager.QueueAttack(attack);

@@ -66,7 +66,8 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                 }
 
                 if (currentTarget != null) {
-                    if (currentTarget.GetComponent<AttackableGameObject>().IsDead()) {
+                    AttackableGameObject target = currentTarget.GetComponent<AttackableGameObject>();
+                    if (target == null || target.IsDead()) {
                         players.Remove(currentTarget);
                         ChooseTarget();
                     } else {
@@ -81,7 +82,7 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                         } else {
                             agent.destination = agent.transform.position;
                             if (timeManager.getTimeSeconds() - lastAttackTime > RANGED_ATTACK_CD) {
-                                transform.LookAt(currentTarget.transform);
+                                transform.LookAt(new Vector3(currentTarget.transform.position.x, transform.position.y, currentTarget.transform.position.z));
                                 Attack attack = new Attack("autoattack", gameObject, currentTarget, 10);
                                 GameObject autoAttack = Instantiate(autoAttackPrefab, transform.position + transform.forward, transform.rotation);
                                 autoAttack.GetComponent<RangedAutoAttackProjectile>().setAttack(attack);

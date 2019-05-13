@@ -38,8 +38,17 @@ public class SelectManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
+        List<int> deadIndeces = new List<int>();
+        for (int i = 0; i < selectableChars.Length; i++) {
+            if (selectableChars[i] == null || selectableChars[i].GetComponent<AttackableGameObject>().IsDead()) {
+                deadIndeces.Add(i);
+            }
+        }
+        foreach (int index in deadIndeces) {
+            selectableChars[index] = null;
+        }
+
         if (!abilityReady && !overButton) {
             if (Input.GetMouseButton(0))
             {
@@ -61,23 +70,31 @@ public class SelectManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            HandleUnitSelection(Vector3.zero, Vector3.zero);
-            selectableChars[0].SetSelected(true);
-            mainCameraScript.SetPlayer(selectableChars[0].gameObject);
-            selectableChars[0].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
-            selectableChars[1].SetSelected(false);
-            selectableChars[1].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
-            numSelected = 1;
+            if (selectableChars[0] != null) {
+                HandleUnitSelection(Vector3.zero, Vector3.zero);
+                selectableChars[0].SetSelected(true);
+                mainCameraScript.SetPlayer(selectableChars[0].gameObject);
+                selectableChars[0].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+                if (selectableChars[1] != null) {
+                    selectableChars[1].SetSelected(false);
+                    selectableChars[1].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
+                }                   
+                numSelected = 1;
+            }                
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            HandleUnitSelection(Vector3.zero, Vector3.zero);
-            selectableChars[1].SetSelected(true);
-            numSelected = 1;
-            mainCameraScript.SetPlayer(selectableChars[1].gameObject);
-            selectableChars[1].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
-            selectableChars[0].SetSelected(false);
-            selectableChars[0].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
+            if (selectableChars[1] != null) {
+                HandleUnitSelection(Vector3.zero, Vector3.zero);
+                selectableChars[1].SetSelected(true);
+                numSelected = 1;
+                mainCameraScript.SetPlayer(selectableChars[1].gameObject);
+                selectableChars[1].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+                if (selectableChars[0] != null) {
+                    selectableChars[0].SetSelected(false);
+                    selectableChars[0].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
+                }
+            }
         }
     }
 
@@ -113,16 +130,18 @@ public class SelectManager : MonoBehaviour
 
         foreach (SelectableCharacter selChar in selectableChars)
         {
-            Vector2 position = mainCamera.WorldToScreenPoint(selChar.gameObject.transform.position);
-            Rect charRect = new Rect(position.x - 50, position.y, 100, 100);
-            if (charRect.Overlaps(rect)) {
-                selChar.SetSelected(true);
-                numSelected++;
-                mainCameraScript.SetPlayer(selChar.gameObject);
-                selChar.gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
-            } else {
-                selChar.SetSelected(false);
-                selChar.gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
+            if (selChar != null) {
+                Vector2 position = mainCamera.WorldToScreenPoint(selChar.gameObject.transform.position);
+                Rect charRect = new Rect(position.x - 50, position.y, 100, 100);
+                if (charRect.Overlaps(rect)) {
+                    selChar.SetSelected(true);
+                    numSelected++;
+                    mainCameraScript.SetPlayer(selChar.gameObject);
+                    selChar.gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+                } else {
+                    selChar.SetSelected(false);
+                    selChar.gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
+                }
             }
         }
 
@@ -130,14 +149,15 @@ public class SelectManager : MonoBehaviour
         {
             foreach (SelectableCharacter selChar in selectableChars)
             {
-                selChar.SetSelected(false);
-                selChar.gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
-                if (selChar.GetTargetIndicator() != null)
-                {
-                    GameObject.Destroy(selChar.GetTargetIndicator());
-                    selChar.SetTargetIndicator(null);
-                    selChar.GetLineRenderer().positionCount = 0;
-                }
+                if (selChar != null) {
+                    selChar.SetSelected(false);
+                    selChar.gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
+                    if (selChar.GetTargetIndicator() != null) {
+                        GameObject.Destroy(selChar.GetTargetIndicator());
+                        selChar.SetTargetIndicator(null);
+                        selChar.GetLineRenderer().positionCount = 0;
+                    }
+                }                
             }
         }
     }
