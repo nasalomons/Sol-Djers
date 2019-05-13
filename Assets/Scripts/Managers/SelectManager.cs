@@ -46,7 +46,7 @@ public class SelectManager : MonoBehaviour
             }
         }
         foreach (int index in deadIndeces) {
-            selectableChars[index] = null;
+            selectableChars[index] = null;            
         }
 
         if (!abilityReady && !overButton) {

@@ -16,7 +16,7 @@ public abstract class TargetedProjectileScript : MonoBehaviour {
     void FixedUpdate() {
         if (attack != null && !pauseManager.IsPaused()) {
             GameObject target = attack.getTarget();
-            transform.position = Vector3.Lerp(transform.position, target.transform.position, Time.deltaTime * 10);
+            transform.position = Vector3.Lerp(transform.position, target.transform.position, Time.deltaTime * 5);
             transform.LookAt(target.transform);
 
             if ((transform.position - target.transform.position).magnitude < 0.3) {

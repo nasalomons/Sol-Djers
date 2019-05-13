@@ -83,6 +83,7 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                             agent.destination = agent.transform.position;
                             if (timeManager.getTimeSeconds() - lastAttackTime > RANGED_ATTACK_CD) {
                                 transform.LookAt(new Vector3(currentTarget.transform.position.x, transform.position.y, currentTarget.transform.position.z));
+                                transform.Rotate(0, -135, 0);
                                 Attack attack = new Attack("autoattack", gameObject, currentTarget, 10);
                                 GameObject autoAttack = Instantiate(autoAttackPrefab, transform.position + transform.forward, transform.rotation);
                                 autoAttack.GetComponent<RangedAutoAttackProjectile>().setAttack(attack);

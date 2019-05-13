@@ -348,6 +348,8 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
                 // dead
                 isDead = true;
                 animator.SetTrigger("IsDead");
+                SetSelected(false);
+                gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
                 attackManager.Unsubscribe(this);
                 eventManager.Unsubscribe(this);
                 Destroy(this);
