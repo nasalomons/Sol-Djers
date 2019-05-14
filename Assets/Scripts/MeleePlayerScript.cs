@@ -24,6 +24,7 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
             currentAction = action;
 
             // stop moving
+            agent.velocity = Vector3.zero;
             agent.destination = transform.position;
             transform.LookAt(new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
 

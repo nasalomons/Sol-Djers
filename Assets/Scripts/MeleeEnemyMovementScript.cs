@@ -23,6 +23,7 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
     private bool isDead;
     private Animator animator;
     private Status status;
+    private Vector3 pauseVelocity;
 
     public List<GameObject> players;
 
@@ -58,6 +59,8 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                 // If we are now paused, and this isn't paused yet
                 if (!lastPauseStatus) {
                     lastPauseStatus = true;
+                    pauseVelocity = agent.velocity;
+                    agent.velocity = Vector3.zero;
                     agent.isStopped = true;
                     animator.enabled = false;
                 }
@@ -65,6 +68,7 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                 // If we aren't paused, but this still is
                 if (lastPauseStatus) {
                     lastPauseStatus = false;
+                    agent.velocity = pauseVelocity;
                     agent.isStopped = false;
                     animator.enabled = true;
                 }
@@ -114,7 +118,8 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
             animator.SetBool("IsMoving", true);
             ChooseTarget();
         } else {
-            agent.destination = agent.transform.position;
+            agent.velocity = Vector3.zero;
+            agent.destination = transform.position;
             transform.LookAt(new Vector3(currentTarget.transform.position.x, transform.position.y, currentTarget.transform.position.z));
             if (timeManager.getTimeSeconds() - lastAttackTime > MELEE_ATTACK_CD) {
                 Attack attack = new Attack("autoattack", gameObject, currentTarget, 10);

@@ -31,6 +31,11 @@ public class SelectManager : MonoBehaviour
         boxStartPosition = Vector3.zero;
         boxEndPosition = Vector3.zero;
         selectableChars = FindObjectsOfType<SelectableCharacter>();
+        if (selectableChars[0].GetComponent<RangedPlayerScript>() != null) {
+            SelectableCharacter temp = selectableChars[0];
+            selectableChars[0] = selectableChars[1];
+            selectableChars[1] = temp;
+        }
         mainCamera = Camera.main;
         mainCameraScript = mainCamera.GetComponent<CameraScript>();
         numSelected = 0;

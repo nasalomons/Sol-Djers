@@ -23,6 +23,7 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
     private bool isDead;
     private Animator animator;
     private Status status;
+    private Vector3 pauseVelocity;
 
     public List<GameObject> players;
 
@@ -56,6 +57,8 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                 // If we are now paused, and this isn't paused yet
                 if (!lastPauseStatus) {
                     lastPauseStatus = true;
+                    pauseVelocity = agent.velocity;
+                    agent.velocity = Vector3.zero;
                     agent.isStopped = true;
                     animator.enabled = false;
                 }
@@ -63,6 +66,7 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                 // If we aren't paused, but this still is
                 if (lastPauseStatus) {
                     lastPauseStatus = false;
+                    agent.velocity = pauseVelocity;
                     agent.isStopped = false;
                     animator.enabled = true;
                 }
@@ -100,7 +104,8 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                                 animator.SetBool("IsMoving", true);
                                 ChooseTarget();
                             } else {
-                                agent.destination = agent.transform.position;
+                                agent.velocity = Vector3.zero;
+                                agent.destination = transform.position;
                                 if (timeManager.getTimeSeconds() - lastAttackTime > RANGED_ATTACK_CD) {
                                     transform.LookAt(new Vector3(currentTarget.transform.position.x, transform.position.y, currentTarget.transform.position.z));
                                     transform.Rotate(0, -135, 0);

@@ -28,6 +28,7 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
     private CutsceneManager cutsceneManager;
 
     protected bool lastPauseStatus;
+    private Vector3 pauseVelocity;
 
     protected Action currentAction;
     protected long lastAttackTime;
@@ -121,6 +122,8 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
                     // If we are now paused, and this isn't paused yet
                     if (!lastPauseStatus) {
                         lastPauseStatus = true;
+                        pauseVelocity = agent.velocity;
+                        agent.velocity = Vector3.zero;
                         agent.isStopped = true;
                         animator.enabled = false;
                     }
@@ -129,6 +132,7 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
                     // If we aren't paused, but this still is
                     if (lastPauseStatus) {
                         lastPauseStatus = false;
+                        agent.velocity = pauseVelocity;
                         agent.isStopped = false;
                         animator.enabled = true;
                     }
