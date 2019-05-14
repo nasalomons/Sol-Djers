@@ -36,6 +36,7 @@ GameObject:
   - component: {fileID: 855632692313564053}
   - component: {fileID: 6179899028495069079}
   - component: {fileID: 5152262506720953977}
+  - component: {fileID: 5183652003173962426}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Enemy
@@ -144,6 +145,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+--- !u!54 &5183652003173962426
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5562604387125565591}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &90042421399236441
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -157,7 +174,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 2f6bf522bd1221f438d4cdb4c83a91a4, type: 3}
       propertyPath: m_TagString
-      value: Enemy
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 2f6bf522bd1221f438d4cdb4c83a91a4, type: 3}
       propertyPath: m_LocalPosition.x

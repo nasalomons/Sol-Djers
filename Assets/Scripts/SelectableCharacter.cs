@@ -153,8 +153,11 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
                     }
                 }
 
-                if (Input.GetMouseButtonUp(0)) {
+                if (Input.GetMouseButtonDown(0)) {
                     Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                }
+
+                if (Input.GetMouseButtonUp(0)) {                   
                     if (hotbarClicked) {
                         hotbarClicked = false;
                     } else {
@@ -165,22 +168,10 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
                                 Action action = null;
                                 if (selectManager.GetNumSelected() == 1 && this.GetSelected()) {
                                     if (clickPosition.transform.gameObject.tag == "Enemy") {
-                                        if (abilityList[abilityToCast].IsCastable()) {
-                                            action = new Action("ability" + abilityToCast, this, clickPosition);
-                                            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                                        } else {
-                                            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                                        }
+                                        action = new Action("ability" + abilityToCast, this, clickPosition);
                                     } else if (abilityToCast == 1 && clickPosition.transform.gameObject.tag == "Ally") {
-                                        if (abilityList[abilityToCast].IsCastable()) {
-                                            action = new Action("ability" + abilityToCast, this, clickPosition);
-                                            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                                        } else {
-                                            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                                        }
+                                        action = new Action("ability" + abilityToCast, this, clickPosition);
                                     }
-                                } else {
-                                    Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                                 }
 
                                 abilityToCast = -1;
@@ -216,6 +207,8 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
                     PrepareAbility(0);
                 } else if (Input.GetKeyDown(KeyCode.W) && this.GetSelected()) {
                     PrepareAbility(1);
+                } else if (Input.GetKeyDown(KeyCode.E) && this.GetSelected()) {
+                    PrepareAbility(2);
                 }
 
                 ShowAction();
@@ -223,11 +216,7 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
         }
     }
 
-    public void PrepareAbility(int abilityIndex) {
-        Cursor.SetCursor(cursorAbility, Vector2.zero, CursorMode.Auto);
-        abilityToCast = abilityIndex;
-        selectManager.SetAbilityReady(true);
-    }
+    public abstract void PrepareAbility(int abilityIndex);
 
     public bool IsDead()
     {
@@ -298,49 +287,18 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
 
     protected abstract void DoAttackAction(Action action);
 
-    public void OnActionEvent(Action action)
-    {
-        if (action.getName().Equals("move"))
-        {
-            DoMovementAction(action, action.getNextAction());
-        }
-        else if (action.getName().Equals("autoattack"))
-        {
-            DoAttackAction(action);
-        }
-        else if (action.getName().Equals("ability0"))
-        {
-            GameObject target = action.getDestination().transform.gameObject;
-            if (target != null)
-            {
-                animator.SetBool("IsMoving", false);
-                animator.SetTrigger("IsCastingAbility");
-                abilityList[0].CastAbility(gameObject, target);
-            }
-        }
-        else if (action.getName().Equals("ability1"))
-        {
-            GameObject target = action.getDestination().transform.gameObject;
-            if (target != null)
-            {
-                animator.SetBool("IsMoving", false);
-                animator.SetTrigger("IsCastingAbility");
-                abilityList[1].CastAbility(gameObject, target);
-            }
-        }
-        ShowAction();
-    }
+    public abstract void OnActionEvent(Action action);
 
     public void OnAttacked(AttackManager.Attack attack)
     {
-        if (attack.getTarget().Equals(gameObject))
+        if (attack.GetTarget().Equals(gameObject))
         {
-            if (overhead.TakeDamage(attack.getDamage()))
+            if (overhead.TakeDamage(attack.GetDamage()))
             {
                 // alive
-                if (attack.getAbility() != null)
+                if (attack.GetAbility() != null)
                 {
-                    attack.getAbility().DoAbilityEffect(gameObject);
+                    attack.GetAbility().DoAbilityEffect(attack.GetOwner(), gameObject);
                 }
             }
             else
@@ -355,5 +313,9 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
                 Destroy(this);
             }
         }
+    }
+
+    public void SetStatus(Status status) {
+        // will never happen
     }
 }

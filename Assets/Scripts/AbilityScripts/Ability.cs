@@ -33,7 +33,8 @@ public abstract class Ability : MonoBehaviour {
     // This function will send the ability information to the AttackManager.
     // Call AbilityCasted() at the end.
     public abstract void CastAbility(GameObject owner, GameObject target);
+    public abstract void CastAbility(GameObject owner, List<GameObject> targets);
 
     // This function should be called by the affected target of an ability
-    public abstract void DoAbilityEffect(GameObject target);
+    public abstract void DoAbilityEffect(GameObject owner, GameObject target);
 }

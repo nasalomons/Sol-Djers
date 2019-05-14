@@ -75,7 +75,7 @@ public class HotbarManager : MonoBehaviour {
     }
 
     private void ButtonTask(SelectableCharacter character, int abilityIndex) {
-        character.PrepareAbility(abilityIndex);
         character.HotbarClicked();
+        character.PrepareAbility(abilityIndex);
     }
 }

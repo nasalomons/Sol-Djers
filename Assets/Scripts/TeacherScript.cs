@@ -30,4 +30,7 @@ public class TeacherScript : MonoBehaviour, AttackableGameObject {
         Destroy(GetComponent<NavMeshObstacle>());
     }
 
+    public void SetStatus(Status status) {
+        // will never happen
+    }
 }

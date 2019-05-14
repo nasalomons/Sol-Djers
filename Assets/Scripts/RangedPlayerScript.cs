@@ -48,4 +48,45 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
             eventManager.QueueAction(newAction);
         }
     }
+
+    public override void PrepareAbility(int abilityIndex) {
+        if (abilityList[abilityIndex].IsCastable()) {
+            if (abilityIndex == 2) {
+                eventManager.QueueAction(new Action("ability2", this));
+            } else {
+                Cursor.SetCursor(cursorAbility, Vector2.zero, CursorMode.Auto);
+                abilityToCast = abilityIndex;
+                selectManager.SetAbilityReady(true);
+            }
+        }
+    }
+
+    public override void OnActionEvent(Action action) {
+        if (action.getName().Equals("move")) {
+            DoMovementAction(action, action.getNextAction());
+        } else if (action.getName().Equals("autoattack")) {
+            DoAttackAction(action);
+        } else if (action.getName().Equals("ability0")) {
+            GameObject target = action.getDestination().transform.gameObject;
+            if (target != null) {
+                animator.SetBool("IsMoving", false);
+                animator.SetTrigger("IsCastingAbility");
+                abilityList[0].CastAbility(gameObject, target);
+            }
+        } else if (action.getName().Equals("ability1")) {
+            GameObject target = action.getDestination().transform.gameObject;
+            if (target != null) {
+                animator.SetBool("IsMoving", false);
+                animator.SetTrigger("IsCastingAbility");
+                abilityList[1].CastAbility(gameObject, target);
+            }
+        } else if (action.getName().Equals("ability2")) {
+            List<GameObject> targets = new List<GameObject>(GameObject.FindGameObjectsWithTag("Enemy"));
+            animator.SetBool("IsMoving", false);
+            animator.SetTrigger("IsCastingAbility");
+            abilityList[2].CastAbility(gameObject, targets);
+        }
+
+        ShowAction();
+    }
 }

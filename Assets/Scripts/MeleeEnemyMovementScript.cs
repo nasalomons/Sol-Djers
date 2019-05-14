@@ -22,6 +22,7 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
     private float lastAttackTime;
     private bool isDead;
     private Animator animator;
+    private Status status;
 
     public List<GameObject> players;
 
@@ -38,6 +39,7 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
         lastAttackTime = -MELEE_ATTACK_CD;
         isDead = false;
         animator = GetComponentInParent<Animator>();
+        status = null;
     }
 
     // Update is called once per frame
@@ -67,18 +69,37 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                     animator.enabled = true;
                 }
 
-                if (currentTarget != null) {
-                    AttackableGameObject target = currentTarget.GetComponent<AttackableGameObject>();
-                    if (target == null || target.IsDead()) {
-                        players.Remove(currentTarget);
-                        ChooseTarget();
-                    } else {
-                        AttackTarget();
+                if (status != null) {
+                    agent.velocity = Vector3.zero;
+                    agent.isStopped = true;
+                    animator.enabled = false;
+                    if (status.type == "push") {
+                        Vector3 originToTarget = status.origin - transform.position;
+                        Vector3 direction = new Vector3(
+                            Vector3.Normalize(originToTarget).x,
+                            0,
+                            Vector3.Normalize(originToTarget).z);
+                        transform.parent.Translate(direction * Time.deltaTime * 15);
+                        if (originToTarget.magnitude >= 10) {
+                            status = null;
+                            animator.enabled = true;
+                            agent.isStopped = false;
+                        }
                     }
                 } else {
-                    ChooseTarget();
-                    if (currentTarget == null) {
-                        animator.SetBool("IsMoving", false);
+                    if (currentTarget != null) {
+                        AttackableGameObject target = currentTarget.GetComponent<AttackableGameObject>();
+                        if (target == null || target.IsDead()) {
+                            players.Remove(currentTarget);
+                            ChooseTarget();
+                        } else {
+                            AttackTarget();
+                        }
+                    } else {
+                        ChooseTarget();
+                        if (currentTarget == null) {
+                            animator.SetBool("IsMoving", false);
+                        }
                     }
                 }
             }
@@ -136,9 +157,12 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
     }
 
     public void OnAttacked(AttackManager.Attack attack) {
-        if (attack.getTarget().Equals(gameObject)) {
-            if (healthBar.TakeDamage(attack.getDamage())) {
+        if (attack.GetTarget().Equals(gameObject)) {
+            if (healthBar.TakeDamage(attack.GetDamage())) {
                 // alive
+                if (attack.GetAbility() != null) {
+                    attack.GetAbility().DoAbilityEffect(attack.GetOwner(), gameObject);
+                }
             } else {
                 // dead
                 animator.SetTrigger("IsDead");
@@ -147,5 +171,15 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                 Destroy(this);
             }
         }
+    }
+
+    public void SetStatus(Status status) {
+        this.status = status;
+    }
+
+    public void OnTriggerEnter(Collider other) {
+        status = null;
+        animator.enabled = true;
+        agent.isStopped = false;
     }
 }

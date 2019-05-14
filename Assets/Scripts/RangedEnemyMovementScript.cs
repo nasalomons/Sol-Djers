@@ -22,6 +22,7 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
     private float lastAttackTime;
     private bool isDead;
     private Animator animator;
+    private Status status;
 
     public List<GameObject> players;
 
@@ -39,6 +40,7 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
         lastAttackTime = -RANGED_ATTACK_CD;
         isDead = false;
         animator = GetComponentInParent<Animator>();
+        status = null;
     }
 
     // Update is called once per frame
@@ -65,38 +67,57 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                     animator.enabled = true;
                 }
 
-                if (currentTarget != null) {
-                    AttackableGameObject target = currentTarget.GetComponent<AttackableGameObject>();
-                    if (target == null || target.IsDead()) {
-                        players.Remove(currentTarget);
-                        ChooseTarget();
-                    } else {
-                        Vector3 playerPosition = currentTarget.transform.position;
-                        float distance = (transform.position - playerPosition).magnitude;
-                        NavMeshPath path = new NavMeshPath();
-                        agent.CalculatePath(playerPosition, path);
-                        if (distance > RANGED_DISTANCE || path.corners.Length > 2) {
-                            agent.destination = playerPosition;
-                            animator.SetBool("IsMoving", true);
-                            ChooseTarget();
-                        } else {
-                            agent.destination = agent.transform.position;
-                            if (timeManager.getTimeSeconds() - lastAttackTime > RANGED_ATTACK_CD) {
-                                transform.LookAt(new Vector3(currentTarget.transform.position.x, transform.position.y, currentTarget.transform.position.z));
-                                transform.Rotate(0, -135, 0);
-                                Attack attack = new Attack("autoattack", gameObject, currentTarget, 10);
-                                GameObject autoAttack = Instantiate(autoAttackPrefab, transform.position + transform.forward, transform.rotation);
-                                autoAttack.GetComponent<RangedAutoAttackProjectile>().setAttack(attack);
-                                lastAttackTime = timeManager.getTimeSeconds();
-                                animator.SetBool("IsMoving", false);
-                                animator.SetTrigger("IsAttacking");
-                            }
+                if (status != null) {
+                    agent.velocity = Vector3.zero;
+                    agent.isStopped = true;
+                    animator.enabled = false;
+                    if (status.type == "push") {
+                        Vector3 originToTarget = status.origin - transform.position;
+                        Vector3 direction = new Vector3(
+                            Vector3.Normalize(originToTarget).x,
+                            0,
+                            Vector3.Normalize(originToTarget).z);
+                        transform.parent.Translate(direction * Time.deltaTime * 15);
+                        if (originToTarget.magnitude >= 10) {
+                            status = null;
+                            animator.enabled = true;
+                            agent.isStopped = false;
                         }
                     }
                 } else {
-                    ChooseTarget();
-                    if (currentTarget == null) {
-                        animator.SetBool("IsMoving", false);
+                    if (currentTarget != null) {
+                        AttackableGameObject target = currentTarget.GetComponent<AttackableGameObject>();
+                        if (target == null || target.IsDead()) {
+                            players.Remove(currentTarget);
+                            ChooseTarget();
+                        } else {
+                            Vector3 playerPosition = currentTarget.transform.position;
+                            float distance = (transform.position - playerPosition).magnitude;
+                            NavMeshPath path = new NavMeshPath();
+                            agent.CalculatePath(playerPosition, path);
+                            if (distance > RANGED_DISTANCE || path.corners.Length > 2) {
+                                agent.destination = playerPosition;
+                                animator.SetBool("IsMoving", true);
+                                ChooseTarget();
+                            } else {
+                                agent.destination = agent.transform.position;
+                                if (timeManager.getTimeSeconds() - lastAttackTime > RANGED_ATTACK_CD) {
+                                    transform.LookAt(new Vector3(currentTarget.transform.position.x, transform.position.y, currentTarget.transform.position.z));
+                                    transform.Rotate(0, -135, 0);
+                                    Attack attack = new Attack("autoattack", gameObject, currentTarget, 10);
+                                    GameObject autoAttack = Instantiate(autoAttackPrefab, transform.position + transform.forward, transform.rotation);
+                                    autoAttack.GetComponent<RangedAutoAttackProjectile>().setAttack(attack);
+                                    lastAttackTime = timeManager.getTimeSeconds();
+                                    animator.SetBool("IsMoving", false);
+                                    animator.SetTrigger("IsAttacking");
+                                }
+                            }
+                        }
+                    } else {
+                        ChooseTarget();
+                        if (currentTarget == null) {
+                            animator.SetBool("IsMoving", false);
+                        }
                     }
                 }
             }
@@ -123,9 +144,12 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
     }
 
     public void OnAttacked(AttackManager.Attack attack) {
-        if (attack.getTarget().Equals(gameObject)) {
-            if (healthBar.TakeDamage(attack.getDamage())) {
+        if (attack.GetTarget().Equals(gameObject)) {
+            if (healthBar.TakeDamage(attack.GetDamage())) {
                 // alive
+                if (attack.GetAbility() != null) {
+                    attack.GetAbility().DoAbilityEffect(attack.GetOwner(), gameObject);
+                }
             } else {
                 // dead
                 animator.SetTrigger("IsDead");
@@ -134,5 +158,15 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                 Destroy(this);
             }
         }
+    }
+
+    public void SetStatus(Status status) {
+        this.status = status;
+    }
+
+    public void OnTriggerEnter(Collider other) {
+        status = null;
+        animator.enabled = true;
+        agent.isStopped = false;
     }
 }

@@ -21,11 +21,11 @@ public class SplittingRayProjectileScript : TargetedProjectileScript {
             subProjectilePrefab,
             transform.position,
             transform.rotation * Quaternion.Euler(0, 90, 0));
-        leftSubProjectile.GetComponent<SplittingRaySubProjectileScript>().setOriginTarget(attack.getTarget());
+        leftSubProjectile.GetComponent<SplittingRaySubProjectileScript>().setOriginTarget(attack.GetTarget());
         GameObject rightSubProjectile = Instantiate(
             subProjectilePrefab,
             transform.position,
             transform.rotation * Quaternion.Euler(0, 270, 0));
-        rightSubProjectile.GetComponent<SplittingRaySubProjectileScript>().setOriginTarget(attack.getTarget());
+        rightSubProjectile.GetComponent<SplittingRaySubProjectileScript>().setOriginTarget(attack.GetTarget());
     }
 }

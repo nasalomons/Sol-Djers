@@ -28,9 +28,11 @@ public class SplittingRayAbility : Ability {
         AbilityCasted();
     }
 
-    public override void DoAbilityEffect(GameObject target) {
+    public override void DoAbilityEffect(GameObject owner, GameObject target) {
         // nothing
     }
 
-    
+    public override void CastAbility(GameObject owner, List<GameObject> targets) {
+        // nothing
+    }
 }

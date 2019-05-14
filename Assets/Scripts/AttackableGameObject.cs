@@ -6,4 +6,5 @@ using static AttackManager;
 public interface AttackableGameObject {
     void OnAttacked(Attack attack);
     bool IsDead();
+    void SetStatus(Status status);
 }

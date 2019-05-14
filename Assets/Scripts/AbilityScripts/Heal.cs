@@ -19,7 +19,7 @@ public class Heal : Ability {
         AbilityCasted();
     }
 
-    public override void DoAbilityEffect(GameObject target) {
+    public override void DoAbilityEffect(GameObject owner, GameObject target) {
         temp = Instantiate(ray, target.transform.position, Quaternion.Euler(new Vector3(270, 0, 0)));
         temp.Play();
         Invoke("StopParticles", 1);
@@ -28,5 +28,9 @@ public class Heal : Ability {
     private void StopParticles() {
         temp.Stop();
         temp = null;
+    }
+
+    public override void CastAbility(GameObject owner, List<GameObject> targets) {
+        // nothing
     }
 }

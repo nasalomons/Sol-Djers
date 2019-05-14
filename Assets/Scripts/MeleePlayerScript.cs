@@ -48,4 +48,39 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
             eventManager.QueueAction(newAction);
         }
     }
+
+    public override void PrepareAbility(int abilityIndex) {
+        if (abilityList[abilityIndex].IsCastable()) {
+            Cursor.SetCursor(cursorAbility, Vector2.zero, CursorMode.Auto);
+            abilityToCast = abilityIndex;
+            selectManager.SetAbilityReady(true);
+        }
+    }
+
+    public override void OnActionEvent(Action action) {
+        if (action.getName().Equals("move")) {
+            DoMovementAction(action, action.getNextAction());
+        } else if (action.getName().Equals("autoattack")) {
+            DoAttackAction(action);
+        } else if (action.getName().Equals("ability0")) {
+            GameObject target = action.getDestination().transform.gameObject;
+            if (target != null) {
+                animator.SetBool("IsMoving", false);
+                animator.SetTrigger("IsCastingAbility");
+                abilityList[0].CastAbility(gameObject, target);
+            }
+        } else if (action.getName().Equals("ability1")) {
+            GameObject target = action.getDestination().transform.gameObject;
+            if (target != null) {
+                animator.SetBool("IsMoving", false);
+                animator.SetTrigger("IsCastingAbility");
+                abilityList[1].CastAbility(gameObject, target);
+            }
+        } else if (action.getName().Equals("ability2")) {
+
+        }
+
+
+        ShowAction();
+    }
 }
