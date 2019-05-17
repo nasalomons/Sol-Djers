@@ -23,6 +23,7 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
     private bool isDead;
     private Animator animator;
     private Status status;
+    private float statusStartTime;
     private Vector3 pauseVelocity;
 
     public List<GameObject> players;
@@ -165,8 +166,24 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
         }
     }
 
-    public void SetStatus(Status status) {
+    public void SetStatus(Status status)
+    {
         this.status = status;
+        this.statusStartTime = timeManager.getTimeSeconds();
+    }
+
+    public void RemoveStatus()
+    {
+        this.status = null;
+        Debug.Log("Removed status from " + this.gameObject.name);
+
+        foreach (Transform child in transform)
+        {
+            if (child.gameObject.name == "BeveledStar(Clone)")
+            {
+                Destroy(child.gameObject);
+            }
+        }
     }
 
     public void OnTriggerEnter(Collider other) {

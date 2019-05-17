@@ -3372,7 +3372,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: A powerful attack
 --- !u!222 &481795480
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3523,7 +3523,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: Stun an enemy
 --- !u!222 &498490904
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7359,8 +7359,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 7b34caca00a1514468b8d9cc005a43fc, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -8091,7 +8091,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: Shield an ally from damage
 --- !u!222 &1076443892
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8506,8 +8506,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 29ee0544a9e494645b9cc843ef664252, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -11214,6 +11214,11 @@ PrefabInstance:
       propertyPath: lineRenderer
       value: 
       objectReference: {fileID: 1724242447}
+    - target: {fileID: 3369156023706890285, guid: ea70b58feddfc51489e163b37a42846d,
+        type: 3}
+      propertyPath: cursorAbility
+      value: 
+      objectReference: {fileID: 2800000, guid: 009bc0f57c177604a90b4697026d8c00, type: 3}
     - target: {fileID: 1024466569290462569, guid: ea70b58feddfc51489e163b37a42846d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -15521,6 +15526,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.0070426576
       objectReference: {fileID: 0}
+    - target: {fileID: 8946109020722270113, guid: 7787d300a80fb244fa25c6e6e9fd26ec,
+        type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8946109020734135995, guid: 7787d300a80fb244fa25c6e6e9fd26ec,
         type: 3}
       propertyPath: m_LocalRotation.x
@@ -16981,11 +16991,6 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -0.0018682452
       objectReference: {fileID: 0}
-    - target: {fileID: 8946109020722270113, guid: 7787d300a80fb244fa25c6e6e9fd26ec,
-        type: 3}
-      propertyPath: m_ReceiveShadows
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7787d300a80fb244fa25c6e6e9fd26ec, type: 3}
 --- !u!114 &1830433562 stripped
@@ -17594,8 +17599,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: caccc09442e90904d94b08c1ae00b653, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

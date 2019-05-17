@@ -51,7 +51,9 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
     }
 
     public override void PrepareAbility(int abilityIndex) {
+        Debug.Log("Preparing ability " + abilityIndex.ToString());
         if (abilityList[abilityIndex].IsCastable()) {
+            Debug.Log("Ability is castable");
             Cursor.SetCursor(cursorAbility, Vector2.zero, CursorMode.Auto);
             abilityToCast = abilityIndex;
             selectManager.SetAbilityReady(true);
@@ -78,7 +80,13 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
                 abilityList[1].CastAbility(gameObject, target);
             }
         } else if (action.getName().Equals("ability2")) {
-
+            GameObject target = action.getDestination().transform.gameObject;
+            if (target != null)
+            {
+                animator.SetBool("IsMoving", false);
+                animator.SetTrigger("IsCastingAbility");
+                abilityList[2].CastAbility(gameObject, target);
+            }
         }
 
 

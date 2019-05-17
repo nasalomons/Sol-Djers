@@ -47,6 +47,9 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
 
     private bool hotbarClicked;
 
+    protected Status status;
+    protected float statusStartTime;
+
     public void Start()
     {
         selectManager = SelectManager.Instance;
@@ -81,6 +84,8 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
         animator = gameObject.GetComponent<Animator>();
 
         hotbarClicked = false;
+
+        status = null;
     }
 
     public void SetSelected(bool val)
@@ -173,7 +178,7 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
                                 if (selectManager.GetNumSelected() == 1 && this.GetSelected()) {
                                     if (clickPosition.transform.gameObject.tag == "Enemy") {
                                         action = new Action("ability" + abilityToCast, this, clickPosition);
-                                    } else if (abilityToCast == 1 && clickPosition.transform.gameObject.tag == "Ally") {
+                                    } else if (clickPosition.transform.gameObject.tag == "Ally") {
                                         action = new Action("ability" + abilityToCast, this, clickPosition);
                                     }
                                 }
@@ -216,6 +221,11 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
                 }
 
                 ShowAction();
+            }
+
+            if (status != null && (timeManager.getTimeSeconds() - statusStartTime > status.length))
+            {
+                RemoveStatus();
             }
         }
     }
@@ -297,29 +307,51 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
     {
         if (attack.GetTarget().Equals(gameObject))
         {
-            if (overhead.TakeDamage(attack.GetDamage()))
+            if (this.status == null || !(this.status.type == "shielded"))
             {
-                // alive
-                if (attack.GetAbility() != null)
+                Debug.Log("No current status");
+                if (overhead.TakeDamage(attack.GetDamage()))
                 {
-                    attack.GetAbility().DoAbilityEffect(attack.GetOwner(), gameObject);
+                    Debug.Log("Made damage call");  
+                    // alive
+                    if (attack.GetAbility() != null)
+                    {
+                        Debug.Log("Ally ability called");
+                        attack.GetAbility().DoAbilityEffect(attack.GetOwner(), gameObject);
+                    }
                 }
-            }
-            else
-            {
-                // dead
-                isDead = true;
-                animator.SetTrigger("IsDead");
-                SetSelected(false);
-                gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
-                attackManager.Unsubscribe(this);
-                eventManager.Unsubscribe(this);
-                Destroy(this);
+                else
+                {
+                    // dead
+                    isDead = true;
+                    animator.SetTrigger("IsDead");
+                    SetSelected(false);
+                    gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
+                    attackManager.Unsubscribe(this);
+                    eventManager.Unsubscribe(this);
+                    Destroy(this);
+                }
             }
         }
     }
 
     public void SetStatus(Status status) {
-        // will never happen
+        Debug.Log("Set Status on " + this.gameObject.name);
+        this.status = status;
+        this.statusStartTime = timeManager.getTimeSeconds();
+    }
+
+    public void RemoveStatus()
+    {
+        this.status = null;
+        Debug.Log("Removed status from " + this.gameObject.name);
+        
+        foreach (Transform child in transform)
+        {
+            if (child.gameObject.name == "Shield(Clone)" || child.gameObject.name == "BeveledStar(Clone)")
+            {
+                Destroy(child.gameObject);
+            }
+        }
     }
 }
