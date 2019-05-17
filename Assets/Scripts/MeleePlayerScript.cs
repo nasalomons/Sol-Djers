@@ -74,7 +74,7 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
             }
         } else if (action.getName().Equals("ability1")) {
             GameObject target = action.getDestination().transform.gameObject;
-            if (target != null) {
+            if (target != null && target.tag == "Ally") {
                 animator.SetBool("IsMoving", false);
                 animator.SetTrigger("IsCastingAbility");
                 abilityList[1].CastAbility(gameObject, target);

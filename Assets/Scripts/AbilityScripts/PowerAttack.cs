@@ -19,7 +19,7 @@ public class PowerAttack : Ability
 
     public override void CastAbility(GameObject owner, GameObject target)
     {
-        Attack attack = new Attack("ability", owner, target, 10.0f, this);
+        Attack attack = new Attack("ability", owner, target, 25.0f, this);
         attackManager.QueueAttack(attack);
         AbilityCasted();
     }

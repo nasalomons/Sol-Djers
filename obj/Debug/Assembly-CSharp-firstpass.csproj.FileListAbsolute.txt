@@ -1,5 +1,5 @@
-C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\Temp\bin\Debug\Assembly-CSharp.dll
-C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\Temp\bin\Debug\Assembly-CSharp.pdb
+C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\Temp\bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
 C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\Temp\bin\Debug\Microsoft.Win32.Primitives.dll
 C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\Temp\bin\Debug\mscorlib.dll
 C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\Temp\bin\Debug\netstandard.dll
@@ -275,9 +275,8 @@ C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\Temp\bin\Debug\UnityEngi
 C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\Temp\bin\Debug\UnityEngine.Networking.xml
 C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\Temp\bin\Debug\UnityEngine.GoogleAudioSpatializer.xml
 C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\Temp\bin\Debug\UnityEngine.SpatialTracking.xml
-C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
-C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
-C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\obj\Debug\Assembly-CSharp.csproj.CopyComplete
-C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\obj\Debug\Assembly-CSharp.dll
-C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\obj\Debug\Assembly-CSharp.pdb
-C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\obj\Debug\Assembly-CSharp-firstpass.csprojAssemblyReference.cache
+C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\obj\Debug\Assembly-CSharp-firstpass.csproj.CoreCompileInputs.cache
+C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\obj\Debug\Assembly-CSharp-firstpass.csproj.CopyComplete
+C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\obj\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\nasal\Documents\college\comp sci\425\Sol Djers\obj\Debug\Assembly-CSharp-firstpass.pdb

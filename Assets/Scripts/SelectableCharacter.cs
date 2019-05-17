@@ -178,7 +178,7 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
                                 if (selectManager.GetNumSelected() == 1 && this.GetSelected()) {
                                     if (clickPosition.transform.gameObject.tag == "Enemy") {
                                         action = new Action("ability" + abilityToCast, this, clickPosition);
-                                    } else if (clickPosition.transform.gameObject.tag == "Ally") {
+                                    } else if (abilityToCast == 1 && clickPosition.transform.gameObject.tag == "Ally") {
                                         action = new Action("ability" + abilityToCast, this, clickPosition);
                                     }
                                 }

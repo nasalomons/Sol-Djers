@@ -39,6 +39,6 @@ public class Shield : Ability
             target.transform
             );
 
-        shieldSymbol.transform.localScale = new Vector3(0.03f, 0.03f, 0.03f);
+        shieldSymbol.transform.localScale = (new Vector3(1/target.transform.lossyScale.x, 1/target.transform.lossyScale.y, 1/target.transform.lossyScale.z));
     }
 }

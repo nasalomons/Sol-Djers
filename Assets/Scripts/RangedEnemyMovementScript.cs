@@ -89,6 +89,10 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                             agent.isStopped = false;
                         }
                     }
+
+                    if (timeManager.getTimeSeconds() - statusStartTime > status.length) {
+                        RemoveStatus();
+                    }
                 } else {
                     if (currentTarget != null) {
                         AttackableGameObject target = currentTarget.GetComponent<AttackableGameObject>();
@@ -176,14 +180,6 @@ public class RangedEnemyMovementScript : MonoBehaviour, AttackableGameObject {
     {
         this.status = null;
         Debug.Log("Removed status from " + this.gameObject.name);
-
-        foreach (Transform child in transform)
-        {
-            if (child.gameObject.name == "BeveledStar(Clone)")
-            {
-                Destroy(child.gameObject);
-            }
-        }
     }
 
     public void OnTriggerEnter(Collider other) {

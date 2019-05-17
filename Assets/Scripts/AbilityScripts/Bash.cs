@@ -7,6 +7,7 @@ public class Bash : Ability
 {
 
     private GameObject stunPrefab;
+    private GameObject star;
 
     // Start is called before the first frame update
     new void Start()
@@ -31,14 +32,21 @@ public class Bash : Ability
     {
         target.GetComponent<AttackableGameObject>().SetStatus(new Status("stunned", 5.0f));
 
-        GameObject stunSymbol = Instantiate(
+        star = Instantiate(
             stunPrefab,
             target.transform.position + new Vector3(0.0f, 7.0f, 0.0f),
             transform.rotation,
             target.transform
             );
 
-        stunSymbol.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        star.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+
+        Invoke("DestroyStar", 7);
+    }
+
+    private void DestroyStar() {
+        Destroy(star);
+        star = null;
     }
 
 }

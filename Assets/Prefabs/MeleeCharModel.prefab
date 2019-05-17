@@ -1734,8 +1734,8 @@ GameObject:
   - component: {fileID: 2445114610824898343}
   - component: {fileID: 3369156023706890285}
   - component: {fileID: 7052346083451464027}
-  - component: {fileID: 1586842889136196742}
   - component: {fileID: 5256697453469164716}
+  - component: {fileID: 1586842889136196742}
   - component: {fileID: 3429230307993986585}
   m_Layer: 0
   m_Name: MeleeCharModel
@@ -1842,19 +1842,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
---- !u!114 &1586842889136196742
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1024466569290688841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f85178d8e558be945b113819029785d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cooldown: 8
 --- !u!114 &5256697453469164716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1865,6 +1852,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe0eee6bbcacdfc468e644f07183b5af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 8
+--- !u!114 &1586842889136196742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024466569290688841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f85178d8e558be945b113819029785d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 8

@@ -82,13 +82,10 @@ public class RangedPlayerScript : SelectableCharacter, ActionableGameObject, Att
                 abilityList[1].CastAbility(gameObject, target);
             }
         } else if (action.getName().Equals("ability2")) {
-            GameObject target = action.getDestination().transform.gameObject;
-            if (target != null)
-            {
-                animator.SetBool("IsMoving", false);
-                animator.SetTrigger("IsCastingAbility");
-                abilityList[2].CastAbility(gameObject, target);
-            }
+            List<GameObject> targets = new List<GameObject>(GameObject.FindGameObjectsWithTag("Enemy"));
+            animator.SetBool("IsMoving", false);
+            animator.SetTrigger("IsCastingAbility");
+            abilityList[2].CastAbility(gameObject, targets);
         }
 
         ShowAction();
