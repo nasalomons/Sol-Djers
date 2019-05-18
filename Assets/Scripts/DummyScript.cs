@@ -26,7 +26,7 @@ public class DummyScript : MonoBehaviour, AttackableGameObject {
             animator.enabled = false;
         } else {
             animator.enabled = true;
-            if (status != null) {
+            if (status != null && !IsDead()) {
                 animator.enabled = false;
                 if (status.type == "push") {
                     Vector3 originToTarget = status.origin - transform.position;
@@ -53,6 +53,7 @@ public class DummyScript : MonoBehaviour, AttackableGameObject {
             } else {
                 isDead = true;
                 attackManager.Unsubscribe(this);
+                animator.enabled = true;
                 animator.SetTrigger("Die");
             }            
         }

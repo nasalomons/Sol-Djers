@@ -74,7 +74,7 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                     animator.enabled = true;
                 }
 
-                if (status != null) {
+                if (status != null && !IsDead()) {
                     agent.velocity = Vector3.zero;
                     agent.isStopped = true;
                     animator.enabled = false;
@@ -175,6 +175,7 @@ public class MeleeEnemyMovementScript : MonoBehaviour, AttackableGameObject {
                 }
             } else {
                 // dead
+                animator.enabled = true;
                 animator.SetTrigger("IsDead");
                 attackManager.Unsubscribe(this);
                 Destroy(gameObject);

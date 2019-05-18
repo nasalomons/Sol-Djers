@@ -36,8 +36,8 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
 
                 lastAttackTime = currentTime;
 
-                animator.SetTrigger("IsAttacking");
                 animator.SetBool("IsMoving", false);
+                animator.SetTrigger("IsAttacking");
             }
 
             // queue up next attack
@@ -72,6 +72,7 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
                 animator.SetTrigger("IsCastingAbility");
                 abilityList[0].CastAbility(gameObject, target);
             }
+            currentAction = null;
         } else if (action.getName().Equals("ability1")) {
             GameObject target = action.getDestination().transform.gameObject;
             if (target != null && target.tag == "Ally") {
@@ -79,6 +80,7 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
                 animator.SetTrigger("IsCastingAbility");
                 abilityList[1].CastAbility(gameObject, target);
             }
+            currentAction = null;
         } else if (action.getName().Equals("ability2")) {
             GameObject target = action.getDestination().transform.gameObject;
             if (target != null)
@@ -87,6 +89,7 @@ public class MeleePlayerScript : SelectableCharacter, ActionableGameObject, Atta
                 animator.SetTrigger("IsCastingAbility");
                 abilityList[2].CastAbility(gameObject, target);
             }
+            currentAction = null;
         }
 
 
