@@ -86,6 +86,8 @@ public abstract class SelectableCharacter : MonoBehaviour, ActionableGameObject,
         hotbarClicked = false;
 
         status = null;
+
+        //selectManager.HandleUnitSelection(Vector3.zero, Vector3.zero);
     }
 
     public void SetSelected(bool val)

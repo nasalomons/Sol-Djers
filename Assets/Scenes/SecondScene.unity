@@ -12804,6 +12804,16 @@ PrefabInstance:
       propertyPath: m_LocalRotation.w
       value: 0.9994784
       objectReference: {fileID: 0}
+    - target: {fileID: 8887138926167789412, guid: ea70b58feddfc51489e163b37a42846d,
+        type: 3}
+      propertyPath: m_OrthographicSize
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8887138926167789412, guid: ea70b58feddfc51489e163b37a42846d,
+        type: 3}
+      propertyPath: m_FarClipPlane
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea70b58feddfc51489e163b37a42846d, type: 3}
 --- !u!114 &1647254433 stripped

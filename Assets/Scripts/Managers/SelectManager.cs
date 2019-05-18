@@ -79,10 +79,10 @@ public class SelectManager : MonoBehaviour
                 HandleUnitSelection(Vector3.zero, Vector3.zero);
                 selectableChars[0].SetSelected(true);
                 mainCameraScript.SetPlayer(selectableChars[0].gameObject);
-                selectableChars[0].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+                selectableChars[0].gameObject.transform.Find("SelectionCircleAlpha").gameObject.SetActive(true);
                 if (selectableChars[1] != null) {
                     selectableChars[1].SetSelected(false);
-                    selectableChars[1].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
+                    selectableChars[1].gameObject.transform.Find("SelectionCircleAlpha").gameObject.SetActive(false);
                 }                   
                 numSelected = 1;
             }                
@@ -94,10 +94,10 @@ public class SelectManager : MonoBehaviour
                 selectableChars[1].SetSelected(true);
                 numSelected = 1;
                 mainCameraScript.SetPlayer(selectableChars[1].gameObject);
-                selectableChars[1].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+                selectableChars[1].gameObject.transform.Find("SelectionCircleAlpha").gameObject.SetActive(true);
                 if (selectableChars[0] != null) {
                     selectableChars[0].SetSelected(false);
-                    selectableChars[0].gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
+                    selectableChars[0].gameObject.transform.Find("SelectionCircleAlpha").gameObject.SetActive(false);
                 }
             }
         }
@@ -142,10 +142,10 @@ public class SelectManager : MonoBehaviour
                     selChar.SetSelected(true);
                     numSelected++;
                     mainCameraScript.SetPlayer(selChar.gameObject);
-                    selChar.gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Self-Illumin/Outlined Diffuse");
+                    selChar.gameObject.transform.Find("SelectionCircleAlpha").gameObject.SetActive(true);
                 } else {
                     selChar.SetSelected(false);
-                    selChar.gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
+                    selChar.gameObject.transform.Find("SelectionCircleAlpha").gameObject.SetActive(false);
                 }
             }
         }
@@ -156,7 +156,7 @@ public class SelectManager : MonoBehaviour
             {
                 if (selChar != null) {
                     selChar.SetSelected(false);
-                    selChar.gameObject.GetComponentInChildren<Renderer>().material.shader = Shader.Find("Diffuse");
+                    selChar.gameObject.transform.Find("SelectionCircleAlpha").gameObject.SetActive(false);
                     if (selChar.GetTargetIndicator() != null) {
                         GameObject.Destroy(selChar.GetTargetIndicator());
                         selChar.SetTargetIndicator(null);
